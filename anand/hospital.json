@@ -1,0 +1,43 @@
+{
+  "hospital": [
+    {
+      "id": 1,
+      "department": "Homiopathic",
+      "subdep": "No",
+      "gen": "male",
+      "name": "vivek",
+      "address": "hansh",
+      "age": "22",
+      "city": "dhandhka",
+      "contact": "097898767",
+      "blood": "A+",
+      "date": "9/28/2024"
+    },
+    {
+      "id": 2,
+      "department": "Homiopathic",
+      "subdep": "No",
+      "gen": "male",
+      "name": "jaydeep",
+      "address": "gunjar",
+      "age": "24",
+      "city": "gunjar",
+      "contact": "89676656",
+      "blood": "B+",
+      "date": "9/28/2024"
+    },
+    {
+      "id": 3,
+      "department": "Homiopathic",
+      "subdep": "No",
+      "gen": "",
+      "name": "jay",
+      "address": "",
+      "age": "",
+      "city": "",
+      "contact": "",
+      "blood": "",
+      "date": "9/28/2024"
+    }
+  ]
+}
