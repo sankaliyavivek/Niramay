@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Menu, MenuItem, Sidebar, SubMenu } from 'react-pro-sidebar';
+import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar';
 import { Link, Route, Routes } from 'react-router-dom';
 import './App.css';
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
