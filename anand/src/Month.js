@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+const API_URL = process.env.REACT_APP_BACKEND_API_URL
 
 function Month() {
   const [monthData, setMonthData] = useState([]);
@@ -12,7 +13,7 @@ function Month() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:9000/patients/getall");
+        const response = await axios.get(`${API_URL}/patients/getall`);
         setMonthData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);

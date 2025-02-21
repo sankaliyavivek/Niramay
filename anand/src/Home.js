@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_BACKEND_API_URL
+console.log(API_URL)
 function Home() {
     const todayDate = new Date().toISOString().split('T')[0]; // Get YYYY-MM-DD format
     const [date, setDate] = useState(todayDate);
@@ -21,7 +23,7 @@ function Home() {
         }
 
         try {
-            const response = await axios.post('http://localhost:9000/patients/patient', {
+            const response = await axios.post(`${API_URL}/patients/patient`, {
                 department,
                 name,
                 gender,

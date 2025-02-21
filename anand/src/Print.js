@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_BACKEND_API_URL
+
 function Print() {
     const [patient, setPatient] = useState(null);
     const { id } = useParams();
@@ -30,7 +32,7 @@ function Print() {
             }
     
             try {
-                const response = await axios.get(`http://localhost:9000/patients/getprint/${id}`);
+                const response = await axios.get(`${API_URL}/patients/getprint/${id}`);
                 setPatient(response.data);
             } catch (error) {
                 console.error("Error fetching data:", error.response ? error.response.data : error.message);

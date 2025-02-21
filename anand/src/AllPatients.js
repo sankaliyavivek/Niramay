@@ -9,6 +9,8 @@ import axios from 'axios';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
+const API_URL = process.env.REACT_APP_BACKEND_API_URL
+
 function AllPatients() {
   const [patients, setPatients] = useState([]);
   const [filteredPatients, setFilteredPatients] = useState([]);
@@ -16,7 +18,7 @@ function AllPatients() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('http://localhost:9000/patients/getall')
+    axios.get(`${API_URL}/patients/getall`)
       .then(response => {
         setPatients(response.data);
         setFilteredPatients(response.data);

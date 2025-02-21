@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
+const API_URL = process.env.REACT_APP_BACKEND_API_URL
+
 function Edit() {
   const { id } = useParams(); // Get patient ID from URL
   const navigate = useNavigate();
@@ -15,7 +17,7 @@ function Edit() {
   const [date, setDate] = useState("");
 
   useEffect(() => {
-    axios.get(`http://localhost:9000/patients/getprint/${id}`)
+    axios.get(`${API_URL}/patients/getprint/${id}`)
       .then(response => {
         console.log("Fetched Patient:", response.data);
         const patient = response.data;
@@ -36,7 +38,7 @@ function Edit() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:9000/patients/update/${id}`, {
+      await axios.put(`${API_URL}/patients/update/${id}`, {
         department, gender, name, age, address, contact, date
       });
 

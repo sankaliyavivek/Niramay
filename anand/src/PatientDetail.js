@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+const API_URL = process.env.REACT_APP_BACKEND_API_URL
+
 function PatientDetail() {
   const { eid } = useParams();
   const navigate = useNavigate();
   const [patient, setPatient] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:9000/patients/view/${eid}`)
+    axios.get(`${API_URL}/patients/view/${eid}`)
       .then(response => {
         console.log("API Response:", response.data);
 
