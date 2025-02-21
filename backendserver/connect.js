@@ -1,6 +1,6 @@
 const mongooes = require('mongoose');
 
-mongooes.connect('mongodb+srv://sankaliya200310:hVceOULeEGTYdgeY@cluster1.6lmgz.mongodb.net/mypatients')
+mongooes.connect(process.env.MONGO_URI)
 .then(()=>{console.log('connect!')})
 
 module.exports= mongooes.connect;

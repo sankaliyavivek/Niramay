@@ -18,7 +18,7 @@ function AllPatients() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`${API_URL}/patients/getall`)
+    axios.get(`${API_URL}/patients/getall`,{withCredentials:true})
       .then(response => {
         setPatients(response.data);
         setFilteredPatients(response.data);
@@ -50,7 +50,7 @@ function AllPatients() {
     if (!window.confirm("Are you sure you want to delete this patient?")) return;
 
     try {
-      await axios.delete(`http://localhost:9000/patients/delete/${id}`);
+      await axios.delete(`${API_URL}/patients/delete/${id}`,{withCredentials:true});
       alert("Patient deleted successfully!");
       setPatients(patients.filter(patient => patient._id !== id));
       setFilteredPatients(filteredPatients.filter(patient => patient._id !== id));

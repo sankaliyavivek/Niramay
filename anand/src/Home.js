@@ -31,7 +31,7 @@ function Home() {
                 address,
                 contact,
                 date
-            });
+            },{withCredentials:true});
 
             alert(response.data.message);
         } catch (error) {

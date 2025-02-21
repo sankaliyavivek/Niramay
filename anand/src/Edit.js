@@ -17,7 +17,7 @@ function Edit() {
   const [date, setDate] = useState("");
 
   useEffect(() => {
-    axios.get(`${API_URL}/patients/getprint/${id}`)
+    axios.get(`${API_URL}/patients/getprint/${id}`,{withCredentials:true})
       .then(response => {
         console.log("Fetched Patient:", response.data);
         const patient = response.data;
@@ -40,7 +40,7 @@ function Edit() {
     try {
       await axios.put(`${API_URL}/patients/update/${id}`, {
         department, gender, name, age, address, contact, date
-      });
+      },{withCredentials:true});
 
       alert("Patient updated successfully!");
       navigate("/all"); // Redirect after update

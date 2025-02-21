@@ -10,7 +10,7 @@ function PatientDetail() {
   const [patient, setPatient] = useState(null);
 
   useEffect(() => {
-    axios.get(`${API_URL}/patients/view/${eid}`)
+    axios.get(`${API_URL}/patients/view/${eid}`,{withCredentials:true})
       .then(response => {
         console.log("API Response:", response.data);
 

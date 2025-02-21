@@ -32,7 +32,7 @@ function Print() {
             }
     
             try {
-                const response = await axios.get(`${API_URL}/patients/getprint/${id}`);
+                const response = await axios.get(`${API_URL}/patients/getprint/${id}`,{withCredentials:true});
                 setPatient(response.data);
             } catch (error) {
                 console.error("Error fetching data:", error.response ? error.response.data : error.message);
