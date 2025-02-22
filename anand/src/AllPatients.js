@@ -18,15 +18,16 @@ function AllPatients() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`${API_URL}/patients/getall`,{withCredentials:true})
+    axios.get(`${API_URL}/patients/getall`, { withCredentials: true })
       .then(response => {
         setPatients(response.data);
         setFilteredPatients(response.data);
       })
-      .catch(() => {
-        console.error("Error fetching patient data");
+      .catch(error => {
+        console.error("Error fetching patient data:", error.response?.data || error.message);
       });
   }, []);
+  
 
   const handleSearch = () => {
     if (!searchTerm) return;

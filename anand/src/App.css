@@ -33,6 +33,14 @@ h2 {
 /* **************************************************************************************** */
 
 
+.home-main{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid;
+  width: 100% !important;
+}
+
 #colorred 
 {
   color: black;
@@ -40,6 +48,8 @@ h2 {
 
 .Homer 
 {
+  border: 1px solid;
+  width: 100%;
   margin: 40px;
   transition: 1s;
 }
