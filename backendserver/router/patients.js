@@ -207,12 +207,14 @@ router.delete('/delete/:id', async (req, res) => {
 
 router.get('/view/:eid', async (req, res) => {
     try {
-        const { id } = req.params;
-        const allPatients = await Patients.find(id);
-        res.json(allPatients);
+        const patient = await Patients.findById(req.params.eid);
+        if (!patient) return res.status(404).json({ message: "Patient not found" });
+        res.json(patient);
     } catch (error) {
-        res.status(500).json({ message: "Error fetching patients" });
+        console.error("Error fetching patient:", error);
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
 });
+
 
 module.exports = router;

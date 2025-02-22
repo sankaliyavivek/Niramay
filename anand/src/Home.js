@@ -17,12 +17,14 @@ function Home() {
 
     const handleAdd = async (e) => {
         e.preventDefault();
-
+    
         if (!department || !name || !gender || !age || !address || !contact || !date) {
             alert("All fields are required!");
             return;
         }
-
+    
+        console.log("Sending data:", { department, name, gender, age, address, contact, date });
+    
         try {
             const response = await axios.post(`${API_URL}/patients/patient`, {
                 department,
@@ -33,13 +35,15 @@ function Home() {
                 contact,
                 date
             });
-
+    
+            console.log("Server Response:", response.data);
             alert(response.data.message);
         } catch (error) {
-            console.error("Error adding patient:", error);
+            console.error("Error adding patient:", error.response?.data || error.message);
             alert("Failed to add patient.");
         }
     };
+    
 
     return (
         <div>
