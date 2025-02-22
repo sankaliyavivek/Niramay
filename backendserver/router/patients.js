@@ -135,6 +135,7 @@ const express = require('express');
 const router = express.Router();
 const Patients = require('../modal/patients'); // Ensure this matches your schema file
 
+// 🛠️ Fix: Log requests for debugging
 router.post('/patient', async (req, res) => {
     try {
         console.log("Received request:", req.body); // Debugging log
@@ -162,7 +163,17 @@ router.post('/patient', async (req, res) => {
         res.status(500).json({ message: "Error adding patient", error: error.message });
     }
 });
+router.get('/getall', async (req, res) => {
+    try {
+        const allPatients = await Patients.find();
+        res.json(allPatients);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching patients" });
+    }
+});
 
+
+// 🛠️ Fix: Use `.findById(id)` instead of `.find(id)`
 router.get('/getprint/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -179,6 +190,7 @@ router.get('/getprint/:id', async (req, res) => {
     }
 });
 
+// 🛠️ Fix: Ensure all fields are included in `findByIdAndUpdate`
 router.put('/update/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -202,6 +214,7 @@ router.put('/update/:id', async (req, res) => {
     }
 });
 
+// 🛠️ Fix: Use `.findById(id)` instead of `.find(id)`
 router.get('/view/:eid', async (req, res) => {
     try {
         const { eid } = req.params;
@@ -218,6 +231,7 @@ router.get('/view/:eid', async (req, res) => {
     }
 });
 
+// 🛠️ Fix: `findByIdAndDelete(id)` instead of `find(id)`
 router.delete('/delete/:id', async (req, res) => {
     try {
         const { id } = req.params;
