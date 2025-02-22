@@ -13,19 +13,20 @@ import PatientDetail from "./PatientDetail";
 function App() {
   // Manage sidebar state
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 500);
+  // const [isMobile, setIsMobile] = useState(window.innerWidth < 500);
+// console.log(isMobile);
+ // Removed isMobile since it's not used
+useEffect(() => {
+  const handleResize = () => {
+    if (window.innerWidth >= 500) {
+      setIsSidebarExpanded(true);
+    }
+  };
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 500);
-      if (window.innerWidth >= 500) {
-        setIsSidebarExpanded(true);
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
+// 
 
   const toggleSidebar = () => {
     setIsSidebarExpanded((prev) => !prev);
