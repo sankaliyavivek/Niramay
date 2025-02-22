@@ -204,4 +204,15 @@ router.delete('/delete/:id', async (req, res) => {
     }
 });
 
+
+router.get('/view/:eid', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const allPatients = await Patients.find(id);
+        res.json(allPatients);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching patients" });
+    }
+});
+
 module.exports = router;
