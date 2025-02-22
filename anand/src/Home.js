@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_BACKEND_API_URL
+
 console.log(API_URL)
 function Home() {
     const todayDate = new Date().toISOString().split('T')[0]; // Get YYYY-MM-DD format
@@ -31,7 +32,7 @@ function Home() {
                 address,
                 contact,
                 date
-            },{withCredentials:true});
+            });
 
             alert(response.data.message);
         } catch (error) {

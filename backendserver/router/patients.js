@@ -133,119 +133,74 @@
 
 const express = require('express');
 const router = express.Router();
-const Patients = require('../modal/patients'); // Ensure this matches your schema file
+const Patients = require('../modal/patients'); 
 
 // 🛠️ Fix: Log requests for debugging
 router.post('/patient', async (req, res) => {
     try {
-        console.log("Received request:", req.body); // Debugging log
-
         const { department, gender, name, address, age, contact, date } = req.body;
+
         if (!department || !name || !gender || !age || !address || !contact || !date) {
             return res.status(400).json({ message: "All fields are required!" });
         }
 
-        const newPatient = new Patients({
-            department,
-            gender,
-            name,
-            age,
-            address,
-            contact,
-            date
-        });
-
+        const newPatient = new Patients({ department, gender, name, age, address, contact, date });
         await newPatient.save();
-        res.json({ message: "Patient added successfully!" });
 
+        res.status(201).json({ message: "Patient added successfully!", patient: newPatient });
     } catch (error) {
         console.error("Error adding patient:", error);
-        res.status(500).json({ message: "Error adding patient", error: error.message });
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
 });
+
+// Get all patients
 router.get('/getall', async (req, res) => {
     try {
         const allPatients = await Patients.find();
         res.json(allPatients);
     } catch (error) {
-        res.status(500).json({ message: "Error fetching patients" });
+        console.error("Error fetching patients:", error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
 });
 
-
-// 🛠️ Fix: Use `.findById(id)` instead of `.find(id)`
+// Get a single patient by ID
 router.get('/getprint/:id', async (req, res) => {
     try {
-        const { id } = req.params;
-        const patient = await Patients.findById(id);
-
-        if (!patient) {
-            return res.status(404).json({ message: "Patient not found" });
-        }
+        const patient = await Patients.findById(req.params.id);
+        if (!patient) return res.status(404).json({ message: "Patient not found" });
 
         res.json(patient);
     } catch (error) {
         console.error("Error fetching patient:", error);
-        res.status(500).json({ message: "Error fetching patient", error: error.message });
+        res.status(500).json({ message: "Internal Server Error" });
     }
 });
 
-// 🛠️ Fix: Ensure all fields are included in `findByIdAndUpdate`
+// Update patient
 router.put('/update/:id', async (req, res) => {
     try {
-        const { id } = req.params;
-        const { department, gender, name, age, address, contact, date } = req.body;
-
-        const updatedPatient = await Patients.findByIdAndUpdate(
-            id,
-            { department, gender, name, age, address, contact, date },
-            { new: true }
-        );
-
-        if (!updatedPatient) {
-            return res.status(404).json({ message: "Patient not found" });
-        }
+        const updatedPatient = await Patients.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!updatedPatient) return res.status(404).json({ message: "Patient not found" });
 
         res.json({ message: "Patient updated successfully!", patient: updatedPatient });
-
     } catch (error) {
         console.error("Error updating patient:", error);
-        res.status(500).json({ message: "Error updating patient" });
+        res.status(500).json({ message: "Internal Server Error" });
     }
 });
 
-// 🛠️ Fix: Use `.findById(id)` instead of `.find(id)`
-router.get('/view/:eid', async (req, res) => {
-    try {
-        const { eid } = req.params;
-        const patient = await Patients.findById(eid);
-
-        if (!patient) {
-            return res.status(404).json({ message: "Patient not found" });
-        }
-
-        res.json(patient);
-    } catch (error) {
-        console.error("Error fetching patient:", error);
-        res.status(500).json({ message: "Error fetching patient", error: error.message });
-    }
-});
-
-// 🛠️ Fix: `findByIdAndDelete(id)` instead of `find(id)`
+// Delete patient
 router.delete('/delete/:id', async (req, res) => {
     try {
-        const { id } = req.params;
-        const deletedPatient = await Patients.findByIdAndDelete(id);
-
-        if (!deletedPatient) {
-            return res.status(404).json({ message: "Patient not found" });
-        }
+        const deletedPatient = await Patients.findByIdAndDelete(req.params.id);
+        if (!deletedPatient) return res.status(404).json({ message: "Patient not found" });
 
         res.json({ message: "Patient deleted successfully!" });
-
     } catch (error) {
         console.error("Error deleting patient:", error);
-        res.status(500).json({ message: "Error deleting patient" });
+        res.status(500).json({ message: "Internal Server Error" });
     }
 });
 
