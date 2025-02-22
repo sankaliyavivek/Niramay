@@ -27,7 +27,9 @@ h2 {
 }
 
 
-
+.sidebar-toggle {
+  display: none;
+}
 
 
 /* **************************************************************************************** */
@@ -38,7 +40,6 @@ h2 {
   justify-content: center;
   align-items: center;
   border: 1px solid;
-  width: 100% !important;
 }
 
 #colorred 
@@ -151,66 +152,81 @@ h2 {
   }
  }
  /* +++++++++++++++++++++++++++++++++++++++++++++++++ */
-
-
-
- .app-container {
+/* Main Container */
+.app-container {
   display: flex;
   height: 100vh;
-  transition: all 0.3s ease-in-out;
+  background-color: #f4f4f4;
 }
 
-/* Sidebar Styling */
-.app-sidebar {
+/* Sidebar */
+.sidebar {
   background: #2c3e50;
   color: white;
-  height: 100vh;
+  padding-top: 20px;
+  width: 10%;
   transition: width 0.3s ease-in-out;
 }
 
-.menu-title {
-  font-size: 18px;
+/* Sidebar Menu */
+.menu-title h2 {
+  color: #ecf0f1;
   text-align: center;
-  margin: 10px 0;
+  margin: 0;
+  font-size: 22px;
+  font-weight: bold;
 }
 
-.nav-link {
+/* Sidebar Links */
+.sidebar a {
   text-decoration: none;
   color: white;
-  padding: 10px;
-  display: block;
-  transition: background 0.3s;
-}
-
-.nav-link:hover {
-  background: #34495e;
+  font-size: 16px;
 }
 
 /* Sidebar Toggle Button */
 .sidebar-toggle {
-  position: fixed;
+  position: absolute;
   top: 15px;
   left: 15px;
-  background: #007bff;
-  border: none;
+  background: #2c3e50;
   color: white;
-  padding: 10px;
+  border: none;
+  padding: 8px 12px;
   border-radius: 5px;
   cursor: pointer;
-  z-index: 1000;
-  transition: 0.3s;
 }
 
 .sidebar-toggle:hover {
-  background: #0056b3;
+  background: #34495e;
 }
 
 /* Main Content */
-.app-content {
+.main-content {
   flex-grow: 1;
   padding: 20px;
-  transition: margin-left 0.3s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+/* Responsive Sidebar */
+@media (max-width: 700px) {
+  .sidebar {
+    position: fixed;
+    height: 100%;
+    width: 20%;
+    z-index: 1000;
+  }
+
+  .main-content {
+    padding-left: 0;
+
+  }
+  
+}
+
+
 
 
 /* ************************************************************************ */

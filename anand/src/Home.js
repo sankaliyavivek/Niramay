@@ -49,7 +49,6 @@ function Home() {
             <div className='Homer'>
                 <div><h2>New Patient</h2></div>
                 <div>
-
                     <form>
                         <div>
                             <label>Dept:</label>
@@ -125,3 +124,5 @@ function Home() {
 }
 
 export default Home;
+
+

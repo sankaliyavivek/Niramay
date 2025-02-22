@@ -34,7 +34,7 @@ function PatientDetail() {
 
   return (
     <div className="container my-4">
-      <h3 className="text-center">Patient Details</h3>
+      <div><h3 className="text-center">Patient Details</h3></div>
       <div className="card p-4">
         <p><strong>Patient ID:</strong> {patient._id}</p>
         <p><strong>Name:</strong> {patient.name}</p>

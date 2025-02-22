@@ -1,66 +1,67 @@
-import React, { useEffect, useState } from 'react';
-import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar';
-import { Link, Route, Routes } from 'react-router-dom';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import { Link, Route, Routes } from "react-router-dom";
+import "./App.css";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
-import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
-import ReceiptRoundedIcon from "@mui/icons-material/ReceiptRounded";
-import BarChartRoundedIcon from "@mui/icons-material/BarChartRounded";
-import Home from './Home';
-import AllPatients from './AllPatients';
-import Print from './Print';
-import Month from './Month';
-import '../node_modules/bootstrap/dist/css/bootstrap.css';
-import Edit from './Edit';
-import PatientDetail from './PatientDetail';
+import Home from "./Home";
+import AllPatients from "./AllPatients";
+import Print from "./Print";
+import Month from "./Month";
+import "../node_modules/bootstrap/dist/css/bootstrap.css";
+import Edit from "./Edit";
+import PatientDetail from "./PatientDetail";
 
 function App() {
   // Manage sidebar state
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(window.innerWidth < 700);
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 500);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsSidebarCollapsed(window.innerWidth < 700);
+      setIsMobile(window.innerWidth < 500);
+      if (window.innerWidth >= 500) {
+        setIsSidebarExpanded(true);
+      }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const toggleSidebar = () => {
-    setIsSidebarCollapsed((prev) => !prev);
+    setIsSidebarExpanded((prev) => !prev);
   };
 
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
+    <div className="app-container">
       {/* Sidebar Toggle Button */}
-      <button onClick={toggleSidebar} className="sidebar-toggle">
+      <button onClick={toggleSidebar} className="sidebar-toggle ">
         <MenuRoundedIcon />
       </button>
 
       {/* Sidebar */}
-      <Sidebar collapsed={isSidebarCollapsed} className="app" id='apper'>
-        <Menu>
-          <MenuItem className="menu1" icon={<MenuRoundedIcon />}>
-            <h2> QUICKPAY</h2>
-          </MenuItem>
-          <MenuItem icon={<GridViewRoundedIcon />} >  <Link to="/">Home</Link></MenuItem>
-          <MenuItem icon={<ReceiptRoundedIcon />} >  <Link to="/all">AllPatients</Link></MenuItem>
-          <MenuItem icon={<BarChartRoundedIcon />} >  <Link to="/month">Month</Link></MenuItem>
-        </Menu>
-      </Sidebar>
+      <aside className={`sidebar ${isSidebarExpanded ? "expanded" : ""}`}>
+        <nav>
+          <ul>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/all">Patients</Link></li>
+            <li><Link to="/month">Monthly</Link></li>
+
+            
+          </ul>
+        </nav>
+      </aside>
 
       {/* Page Content */}
-      <section>
+      <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/all" element={<AllPatients />} />
           <Route path="/print/:id" element={<Print />} />
           <Route path="/month" element={<Month />} />
-          <Route path='/edit/:id' element={<Edit></Edit>}></Route>
-          <Route path='/view/:eid' element={<PatientDetail></PatientDetail>}></Route>
+          <Route path="/edit/:id" element={<Edit />} />
+          <Route path="/view/:eid" element={<PatientDetail />} />
         </Routes>
-      </section>
+      </main>
     </div>
   );
 }

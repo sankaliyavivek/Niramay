@@ -1,15 +1,11 @@
-
-
-
-
-
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
-const API_URL = process.env.REACT_APP_BACKEND_API_URL
+const API_URL = process.env.REACT_APP_BACKEND_API_URL;
+console.log(API_URL);
 
 function AllPatients() {
   const [patients, setPatients] = useState([]);
@@ -28,7 +24,6 @@ function AllPatients() {
       });
   }, []);
   
-
   const handleSearch = () => {
     if (!searchTerm) return;
     const filtered = patients.filter(patient => 
@@ -51,7 +46,7 @@ function AllPatients() {
     if (!window.confirm("Are you sure you want to delete this patient?")) return;
 
     try {
-      await axios.delete(`${API_URL}/patients/delete/${id}`,{withCredentials:true});
+      await axios.delete(`${API_URL}/patients/delete/${id}`, { withCredentials: true });
       alert("Patient deleted successfully!");
       setPatients(patients.filter(patient => patient._id !== id));
       setFilteredPatients(filteredPatients.filter(patient => patient._id !== id));
@@ -64,29 +59,15 @@ function AllPatients() {
   // Function to download data as a PDF
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
-
-    // Title
     doc.text("Patient List", 14, 10);
-
-    // Table headers
-    const headers = [["Patient ID", "Department", "Name","Contact"]];
-
-    // Data rows
+    const headers = [["Patient ID", "Department", "Name", "Contact"]];
     const data = filteredPatients.map(patient => [
       patient._id,
       patient.department,
       patient.name,
       patient.contact
     ]);
-
-    // Auto-table
-    doc.autoTable({
-      startY: 20,
-      head: headers,
-      body: data
-    });
-
-    // Save PDF
+    doc.autoTable({ startY: 20, head: headers, body: data });
     doc.save("patients.pdf");
   };
 
@@ -104,13 +85,10 @@ function AllPatients() {
           <button className="btn btn-primary mx-2" onClick={handleSearch}>Search</button> 
           <button className="btn btn-secondary" onClick={handleClear}>Clear</button>
         </div>
-
-        {/* Download PDF Button */}
         <button className="btn btn-success" onClick={handleDownloadPDF}>Download PDF</button>
       </div>
-
       <h4 className="text-center">All Patients</h4>
-      <div className="table-responsive">
+      <div className="table-responsive-md">
         <table className="table table-bordered text-center">
           <thead className="table-dark">
             <tr>
@@ -134,13 +112,13 @@ function AllPatients() {
                   <td>
                     <Link to={`/view/${patient._id}`} className='btn btn-primary'>View</Link>
                     <Link to={`/edit/${patient._id}`} className="btn btn-info mx-2">Edit</Link>
-                    <button className="btn bg-danger" onClick={() => handleDelete(patient._id)}>Delete</button>
+                    <button className="btn btn-danger" onClick={() => handleDelete(patient._id)}>Delete</button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="text-danger">No patient found with ID or Name: {searchTerm}</td>
+                <td colSpan="6" className="text-danger">No patient found with ID or Name: {searchTerm}</td>
               </tr>
             )}
           </tbody>
