@@ -5,7 +5,6 @@ import Home from "./Home";
 import AllPatients from "./AllPatients";
 import Print from "./Print";
 import Month from "./Month";
-import "bootstrap/dist/css/bootstrap.css";
 import Edit from "./Edit";
 import PatientDetail from "./PatientDetail";
 import "../node_modules/bootstrap/dist/css/bootstrap.css";
