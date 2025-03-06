@@ -11,11 +11,7 @@ import Edit from "./Edit";
 import PatientDetail from "./PatientDetail";
 
 function App() {
-  // Manage sidebar state
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-  // const [isMobile, setIsMobile] = useState(window.innerWidth < 500);
-// console.log(isMobile);
- // Removed isMobile since it's not used
 useEffect(() => {
   const handleResize = () => {
     if (window.innerWidth >= 500) {
@@ -34,7 +30,6 @@ useEffect(() => {
 
   return (
     <div className="app-container">
-      {/* Sidebar Toggle Button */}
       <button onClick={toggleSidebar} className="sidebar-toggle ">
         <MenuRoundedIcon />
       </button>
@@ -43,7 +38,7 @@ useEffect(() => {
       <aside className={`sidebar ${isSidebarExpanded ? "expanded" : ""}`}>
         <nav>
           <ul>
-            <li><Link to="/">Home</Link></li>
+            <li ><Link to="/">Home</Link></li>
             <li><Link to="/all">Patients</Link></li>
             <li><Link to="/month">Monthly</Link></li>
 

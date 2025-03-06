@@ -47,7 +47,9 @@ function Home() {
     return (
         <div className='home-main'>
             <div className='Homer'>
-                <div><h2>New Patient</h2></div>
+                <div>
+                    <h3 className='text-center w-100'>New Patient</h3>
+                </div>
                 <div>
                     <form>
                         <div>
@@ -65,7 +67,7 @@ function Home() {
 
                         <div>
                             <label>Gender:</label>
-                            <select value={gender} onChange={(e) => setGender(e.target.value)}>
+                            <select value={gender} className='p-1' onChange={(e) => setGender(e.target.value)}>
                                 <option value="" hidden>Gender</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>

@@ -31,6 +31,9 @@ h2 {
   display: none;
 }
 
+.sidebar ul{
+  list-style: none;
+}
 
 /* **************************************************************************************** */
 
@@ -39,7 +42,7 @@ h2 {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid;
+  /* border: 1px solid; */
 }
 
 #colorred 
@@ -49,10 +52,11 @@ h2 {
 
 .Homer 
 {
-  border: 1px solid;
+  /* border: 1px solid; */
   width: 100%;
   margin: 40px;
   transition: 1s;
+  
 }
 
 .Homer input
@@ -70,7 +74,6 @@ h2 {
 .Homer form 
 {
   width: 100%;
-  border: 2px solid;
   border-radius: 4px;
   box-shadow: 6px 6px 20px black;
   padding: 14px 40px;
@@ -87,9 +90,6 @@ h2 {
 {
   text-align: left !important;
 }
-
-
-
 
  /* ********************************************************************************* */
  .ap
