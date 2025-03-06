@@ -1,52 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import "./App.css";
-import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import Home from "./Home";
 import AllPatients from "./AllPatients";
 import Print from "./Print";
 import Month from "./Month";
-import "../node_modules/bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/css/bootstrap.css";
 import Edit from "./Edit";
 import PatientDetail from "./PatientDetail";
+import "../node_modules/bootstrap/dist/css/bootstrap.css";
+
 
 function App() {
-  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-useEffect(() => {
-  const handleResize = () => {
-    if (window.innerWidth >= 500) {
-      setIsSidebarExpanded(true);
-    }
-  };
-
-  window.addEventListener("resize", handleResize);
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
-// 
-
-  const toggleSidebar = () => {
-    setIsSidebarExpanded((prev) => !prev);
-  };
-
   return (
     <div className="app-container">
-      <button onClick={toggleSidebar} className="sidebar-toggle ">
-        <MenuRoundedIcon />
-        <span onClick={toggleSidebar}>X</span>
-      </button>
-
-      {/* Sidebar */}
-      <aside className={`sidebar ${isSidebarExpanded ? "expanded" : ""}`}>
-        <nav>
-          <ul>
-            <li ><Link to="/">Home</Link></li>
-            <li><Link to="/all">Patients</Link></li>
-            <li><Link to="/month">Monthly</Link></li>
-
-            
-          </ul>
-        </nav>
-      </aside>
+      {/* Navbar */}
+      <nav className="navbar">
+        <div className="navbar-brand">Hospital System</div>
+        <ul className="nav-links">
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/all">Patients</Link></li>
+          <li><Link to="/month">Monthly</Link></li>
+        </ul>
+      </nav>
 
       {/* Page Content */}
       <main className="main-content">

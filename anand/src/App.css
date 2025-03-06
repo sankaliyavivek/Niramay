@@ -151,55 +151,60 @@ h2 {
     margin: 0px;
   }
  }
- /* +++++++++++++++++++++++++++++++++++++++++++++++++ */
-/* Main Container */
-.app-container {
+ /* +++++++++++++++++++++++++++++++++++++++++++++++++ *//* Navbar Styling */
+.navbar {
   display: flex;
-  height: 100vh;
-  background-color: #f4f4f4;
-}
-
-/* Sidebar */
-.sidebar {
+  justify-content: space-between;
+  align-items: center;
   background: #2c3e50;
+  padding: 15px 30px;
   color: white;
-  padding-top: 20px;
-  width: 10%;
-  transition: width 0.3s ease-in-out;
 }
 
-/* Sidebar Menu */
-.menu-title h2 {
-  color: #ecf0f1;
-  text-align: center;
-  margin: 0;
-  font-size: 22px;
+.navbar-brand {
+  font-size: 24px;
   font-weight: bold;
 }
 
-/* Sidebar Links */
-.sidebar a {
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  display: inline;
+}
+
+.nav-links a {
+  color: white;
   text-decoration: none;
-  color: white;
-  font-size: 16px;
-}
-
-/* Sidebar Toggle Button */
-.sidebar-toggle {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  background: #2c3e50;
-  color: white;
-  border: none;
+  font-size: 18px;
   padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
+  transition: 0.3s;
 }
 
-.sidebar-toggle:hover {
+.nav-links a:hover {
   background: #34495e;
+  border-radius: 5px;
 }
+
+/* Responsive Navbar */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 10px;
+  }
+}
+
 
 /* Main Content */
 .main-content {
@@ -212,13 +217,6 @@ h2 {
 
 /* Responsive Sidebar */
 @media (max-width: 700px) {
-  .sidebar {
-    position: fixed;
-    height: 100%;
-    width: 20%;
-    z-index: 1000;
-  }
-
   .main-content {
     padding-left: 0;
 
