@@ -1,54 +1,62 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Link, Route, Routes } from "react-router-dom";
+import "./App.css";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import Home from "./Home";
+import AllPatients from "./AllPatients";
+import Print from "./Print";
+import Month from "./Month";
+import "bootstrap/dist/css/bootstrap.css";
+import Edit from "./Edit";
+import PatientDetail from "./PatientDetail";
 
-const API_URL = process.env.REACT_APP_BACKEND_API_URL
-
-function PatientDetail() {
-  const { eid } = useParams();
-  const navigate = useNavigate();
-  const [patient, setPatient] = useState(null);
+function App() {
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(window.innerWidth >= 500);
 
   useEffect(() => {
-    axios.get(`${API_URL}/patients/view/${eid}`)
-      .then(response => {
-        console.log("API Response:", response.data);
+    const handleResize = () => {
+      setIsSidebarExpanded(window.innerWidth >= 500);
+    };
 
-        // Check if response.data is an array
-        if (Array.isArray(response.data)) {
-          // Find the patient with the matching ID
-          const selectedPatient = response.data.find(p => p._id === eid);
-          setPatient(selectedPatient || null);
-        } else {
-          setPatient(response.data); // If it's an object, set directly
-        }
-      })
-      .catch(error => {
-        console.error("Error fetching patient details", error);
-      });
-  }, [eid]);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  if (!patient) {
-    return <p className="text-center mt-4 text-danger">No patient details found.</p>;
-  }
+  const toggleSidebar = () => {
+    setIsSidebarExpanded((prev) => !prev);
+  };
 
   return (
-    <div className="container my-4">
-      <div><h3 className="text-center">Patient Details</h3></div>
-      <div className="card p-4">
-        <p><strong>Patient ID:</strong> {patient._id}</p>
-        <p><strong>Name:</strong> {patient.name}</p>
-        <p><strong>Department:</strong> {patient.department}</p>
-        <p><strong>Contact:</strong> {patient.contact}</p>
-        <p><strong>Age:</strong> {patient.age}</p>
-        <p><strong>Gender:</strong> {patient.gender}</p>
-        <p><strong>Address:</strong> {patient.address}</p>
-        <p><strong>Date:</strong> {patient.date}</p>
+    <div className="app-container">
+      {/* Sidebar Toggle Button */}
+      <button onClick={toggleSidebar} className="sidebar-toggle">
+        {isSidebarExpanded ? <span>X</span> : <MenuRoundedIcon />}
+      </button>
 
-        <button className="btn btn-secondary mt-3" onClick={() => navigate(-1)}>Go Back</button>
-      </div>
+      {/* Sidebar */}
+      <aside className={`sidebar ${isSidebarExpanded ? "expanded" : "collapsed"}`}>
+        <nav>
+          <ul>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/all">Patients</Link></li>
+            <li><Link to="/month">Monthly</Link></li>
+          </ul>
+        </nav>
+      </aside>
+
+      {/* Page Content */}
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/all" element={<AllPatients />} />
+          <Route path="/print/:id" element={<Print />} />
+          <Route path="/month" element={<Month />} />
+          <Route path="/edit/:id" element={<Edit />} />
+          <Route path="/view/:eid" element={<PatientDetail />} />
+        </Routes>
+      </main>
     </div>
   );
 }
 
-export default PatientDetail;
+export default App;

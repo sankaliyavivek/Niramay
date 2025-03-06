@@ -32,6 +32,7 @@ useEffect(() => {
     <div className="app-container">
       <button onClick={toggleSidebar} className="sidebar-toggle ">
         <MenuRoundedIcon />
+        <span onClick={toggleSidebar}>X</span>
       </button>
 
       {/* Sidebar */}

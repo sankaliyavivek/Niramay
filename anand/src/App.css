@@ -177,28 +177,55 @@ h2 {
   font-weight: bold;
 }
 
-/* Sidebar Links */
-.sidebar a {
-  text-decoration: none;
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 200px;
+  height: 100vh;
+  background: #333;
   color: white;
-  font-size: 16px;
+  padding-top: 20px;
+  transition: width 0.3s ease;
 }
 
-/* Sidebar Toggle Button */
+.sidebar.collapsed {
+  width: 50px;
+}
+
 .sidebar-toggle {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  background: #2c3e50;
-  color: white;
+  position: fixed;
+  left: 10px;
+  top: 10px;
+  background: none;
   border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
+  color: white;
+  font-size: 20px;
   cursor: pointer;
 }
 
-.sidebar-toggle:hover {
-  background: #34495e;
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 10px;
+}
+
+.sidebar ul li a {
+  color: white;
+  text-decoration: none;
+  display: block;
+}
+
+.main-content {
+  margin-left: 220px;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar.collapsed + .main-content {
+  margin-left: 70px;
 }
 
 /* Main Content */

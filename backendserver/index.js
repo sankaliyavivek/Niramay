@@ -4,7 +4,6 @@ require('./connect');
 
 const app = express();
 
-// Middleware order fixed: express.json() comes before routes
 app.use(express.json());
 app.use(cors({
     origin: ["http://localhost:9000", "https://niramayclinic.netlify.app"],

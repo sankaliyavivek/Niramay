@@ -76,7 +76,7 @@ function Home() {
 
                         <div>
                             <label>Address:</label>
-                            <textarea value={address} rows={2} cols={24} placeholder='Address' className='my-2' onChange={(e) => setAddress(e.target.value)}></textarea>
+                            <textarea value={address} rows={2} cols={20} placeholder='Address' className='my-2' onChange={(e) => setAddress(e.target.value)}></textarea>
                         </div>
 
                         <div>
