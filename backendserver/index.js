@@ -7,7 +7,7 @@ const app = express();
 // Middleware order fixed: express.json() comes before routes
 app.use(express.json());
 const corsOptions = {
-    origin: ["http://localhost:3000", "https://niramayclinic.netlify.app"],
+    origin: ["http://localhost:9000", "https://niramayclinic.netlify.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
@@ -17,7 +17,8 @@ app.use(cors(corsOptions));
 
 // Set custom headers
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://niramayclinic.netlify.app/');
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();

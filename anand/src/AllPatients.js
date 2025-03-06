@@ -4,7 +4,7 @@ import axios from 'axios';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
-const API_URL = process.env.REACT_APP_BACKEND_API_URL;
+const API_URL = process.env.REACT_APP_BACKEND_API_URL ||"https://niramay-mqzo.onrender.com";
 console.log(API_URL);
 
 function AllPatients() {
