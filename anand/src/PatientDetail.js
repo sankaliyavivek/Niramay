@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 const PatientDetail = () => {
-    const { id } = useParams();
+    const { eid } = useParams();
     const [patient, setPatient] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -10,7 +10,7 @@ const PatientDetail = () => {
     useEffect(() => {
         const fetchPatient = async () => {
             try {
-                const response = await fetch(`http://localhost:9000/patients/view/${id}`);
+                const response = await fetch(`http://localhost:9000/patients/view/${eid}`);
                 if (!response.ok) {
                     throw new Error("Patient not found");
                 }
@@ -24,7 +24,7 @@ const PatientDetail = () => {
         };
 
         fetchPatient();
-    }, [id]);
+    }, [eid]);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
