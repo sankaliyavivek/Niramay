@@ -76,7 +76,7 @@ function Print() {
                     </div>
                     <div className='psecond'>
                         <p><strong>Date:</strong> {datetime}</p>
-                        <p><strong>OPD No:</strong> {patient._id}</p>
+                        <p><strong>OPD No:</strong> {patient.patientId}</p>
                         <p><strong>Consultant:</strong> ANAND</p>
                     </div>
                 </div>

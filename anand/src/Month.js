@@ -87,8 +87,8 @@ function Month() {
           <tbody>
             {filteredData.length > 0 ? (
               filteredData.map((item) => (
-                <tr key={item._id}>
-                  <td>{item._id}</td>
+                <tr key={item.patientId}>
+                  <td>{item.patientId}</td>
                   <td>{item.department}</td>
                   <td>{item.name}</td>
                   <td>{new Date(item.date).toLocaleDateString()}</td>

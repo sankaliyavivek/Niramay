@@ -15,7 +15,7 @@ function App() {
     <div className="app-container">
       {/* Navbar */}
       <nav className="navbar">
-        <div className="navbar-brand">Hospital System</div>
+        <div className="navbar-brand text-white">Hospital System</div>
         <ul className="nav-links">
           <li><Link to="/">Home</Link></li>
           <li><Link to="/all">Patients</Link></li>

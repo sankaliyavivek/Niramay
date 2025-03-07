@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 const PatientDetail = () => {
     const { eid } = useParams();
     const [patient, setPatient] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = true;
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -33,6 +33,7 @@ const PatientDetail = () => {
         <div className="container">
             <h2>Patient Details</h2>
             <div className="patient-info">
+                <p><strong>Patient ID:</strong> {patient.patientId}</p>
                 <p><strong>Name:</strong> {patient.name}</p>
                 <p><strong>Age:</strong> {patient.age}</p>
                 <p><strong>Gender:</strong> {patient.gender}</p>

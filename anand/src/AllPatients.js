@@ -37,7 +37,7 @@ function AllPatients() {
     if (!searchTerm) return;
     const filtered = patients.filter(patient => 
       patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      patient._id.includes(searchTerm)
+      patient.patientId.includes(searchTerm)
     );
     setFilteredPatients(filtered);
   };
@@ -57,8 +57,8 @@ function AllPatients() {
     try {
       await axios.delete(`${API_URL}/patients/delete/${id}`, { withCredentials: true });
       alert("Patient deleted successfully!");
-      setPatients(patients.filter(patient => patient._id !== id));
-      setFilteredPatients(filteredPatients.filter(patient => patient._id !== id));
+      setPatients(patients.filter(patient => patient.patientId !== id));
+      setFilteredPatients(filteredPatients.filter(patient => patient.patientId !== id));
     } catch (error) {
       console.error("Error deleting patient:", error);
       alert("Error deleting patient!");
@@ -71,7 +71,7 @@ function AllPatients() {
     doc.text("Patient List", 14, 10);
     const headers = [["Patient ID", "Department", "Name", "Contact"]];
     const data = filteredPatients.map(patient => [
-      patient._id,
+      patient.patientId,
       patient.department,
       patient.name,
       patient.contact
@@ -112,16 +112,16 @@ function AllPatients() {
           <tbody>
             {filteredPatients.length > 0 ? (
               filteredPatients.map((patient) => (
-                <tr key={patient._id}>
-                  <td>{patient._id}</td>
+                <tr key={patient.patientId}>
+                  <td>{patient.patientId}</td>
                   <td>{patient.department}</td>
                   <td>{patient.name}</td>
                   <td>{patient.contact}</td>
                   <td><button className="btn btn-success" onClick={() => handlePrint(patient._id)}>Print</button></td>
                   <td>
-                    <Link to={`/view/${patient._id}`} className='btn btn-primary'>View</Link>
-                    <Link to={`/edit/${patient._id}`} className="btn btn-info mx-2">Edit</Link>
-                    <button className="btn btn-danger" onClick={() => handleDelete(patient._id)}>Delete</button>
+                    <Link to={`/view/${patient.patientId}`} className='btn btn-primary'>View</Link>
+                    <Link to={`/edit/${patient.patientId}`} className="btn btn-info mx-2">Edit</Link>
+                    <button className="btn btn-danger" onClick={() => handleDelete(patient.patientId)}>Delete</button>
                   </td>
                 </tr>
               ))
