@@ -1,62 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { Link, Route, Routes } from "react-router-dom";
-import "./App.css";
-import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
-import Home from "./Home";
-import AllPatients from "./AllPatients";
-import Print from "./Print";
-import Month from "./Month";
-import "bootstrap/dist/css/bootstrap.css";
-import Edit from "./Edit";
-import PatientDetail from "./PatientDetail";
+import { useParams } from "react-router-dom";
 
-function App() {
-  const [isSidebarExpanded, setIsSidebarExpanded] = useState(window.innerWidth >= 500);
+const PatientDetail = () => {
+    const { id } = useParams();
+    const [patient, setPatient] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSidebarExpanded(window.innerWidth >= 500);
-    };
+    useEffect(() => {
+        const fetchPatient = async () => {
+            try {
+                const response = await fetch(`http://localhost:9000/patients/view/${id}`);
+                if (!response.ok) {
+                    throw new Error("Patient not found");
+                }
+                const data = await response.json();
+                setPatient(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+        fetchPatient();
+    }, [id]);
 
-  const toggleSidebar = () => {
-    setIsSidebarExpanded((prev) => !prev);
-  };
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
 
-  return (
-    <div className="app-container">
-      {/* Sidebar Toggle Button */}
-      <button onClick={toggleSidebar} className="sidebar-toggle">
-        {isSidebarExpanded ? <span>X</span> : <MenuRoundedIcon />}
-      </button>
+    return (
+        <div className="container">
+            <h2>Patient Details</h2>
+            <div className="patient-info">
+                <p><strong>Name:</strong> {patient.name}</p>
+                <p><strong>Age:</strong> {patient.age}</p>
+                <p><strong>Gender:</strong> {patient.gender}</p>
+                <p><strong>Department:</strong> {patient.department}</p>
+                <p><strong>Address:</strong> {patient.address}</p>
+                <p><strong>Contact:</strong> {patient.contact}</p>
+                <p><strong>Date:</strong> {new Date(patient.date).toLocaleDateString()}</p>
+            </div>
+        </div>
+    );
+};
 
-      {/* Sidebar */}
-      <aside className={`sidebar ${isSidebarExpanded ? "expanded" : "collapsed"}`}>
-        <nav>
-          <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/all">Patients</Link></li>
-            <li><Link to="/month">Monthly</Link></li>
-          </ul>
-        </nav>
-      </aside>
-
-      {/* Page Content */}
-      <main className="main-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/all" element={<AllPatients />} />
-          <Route path="/print/:id" element={<Print />} />
-          <Route path="/month" element={<Month />} />
-          <Route path="/edit/:id" element={<Edit />} />
-          <Route path="/view/:eid" element={<PatientDetail />} />
-        </Routes>
-      </main>
-    </div>
-  );
-}
-
-export default App;
+export default PatientDetail;
