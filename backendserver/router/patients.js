@@ -78,7 +78,7 @@
 
 const express = require('express');
 const router = express.Router();
-const Patients = require('../model/patients'); 
+const Patients = require('../modal/patients'); 
 
 // Add a new patient
 router.post('/patient', async (req, res) => {
