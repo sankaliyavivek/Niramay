@@ -117,7 +117,7 @@ function AllPatients() {
                   <td>{patient.department}</td>
                   <td>{patient.name}</td>
                   <td>{patient.contact}</td>
-                  <td><button className="btn btn-success" onClick={() => handlePrint(patient._id)}>Print</button></td>
+                  <td><button className="btn btn-success" onClick={() => handlePrint(patient.patientId)}>Print</button></td>
                   <td>
                     <Link to={`/view/${patient.patientId}`} className='btn btn-primary'>View</Link>
                     <Link to={`/edit/${patient.patientId}`} className="btn btn-info mx-2">Edit</Link>

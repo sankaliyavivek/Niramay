@@ -158,7 +158,7 @@ router.delete('/delete/:id', async (req, res) => {
 
 router.get('/view/:eid', async (req, res) => {
     try {
-        const patient = await Patients.findById({patientId: req.params.id});
+        const patient = await Patients.findOne({ patientId: req.params.eid }); // Corrected
         if (!patient) return res.status(404).json({ message: "Patient not found" });
         res.json(patient);
     } catch (error) {
@@ -166,6 +166,7 @@ router.get('/view/:eid', async (req, res) => {
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
 });
+
 
 
 module.exports = router;
