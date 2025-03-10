@@ -4,8 +4,7 @@ import axios from 'axios';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
-const API_URL = process.env.REACT_APP_BACKEND_API_URL ||"https://niramay-mqzo.onrender.com";
-console.log(API_URL);
+const API_URL = process.env.REACT_APP_BACKEND_API_URL || "https://niramay-mqzo.onrender.com";
 
 function AllPatients() {
   const [patients, setPatients] = useState([]);
@@ -15,24 +14,13 @@ function AllPatients() {
 
   useEffect(() => {
     axios.get(`${API_URL}/patients/getall`, { withCredentials: true })
-        .then(response => {
-            console.log("Patients fetched successfully:", response.data);
-            setPatients(response.data);
-            setFilteredPatients(response.data);
-        })
-        .catch(error => {
-            console.error("Error fetching patient data:", error);
-            if (error.response) {
-                console.error("Response Data:", error.response.data);
-            } else if (error.request) {
-                console.error("No Response received:", error.request);
-            } else {
-                console.error("Axios Error:", error.message);
-            }
-        });
-}, []);
+      .then(response => {
+        setPatients(response.data);
+        setFilteredPatients(response.data);
+      })
+      .catch(error => console.error("Error fetching patient data:", error));
+  }, []);
 
-  
   const handleSearch = () => {
     if (!searchTerm) return;
     const filtered = patients.filter(patient => 
@@ -60,12 +48,10 @@ function AllPatients() {
       setPatients(patients.filter(patient => patient.patientId !== id));
       setFilteredPatients(filteredPatients.filter(patient => patient.patientId !== id));
     } catch (error) {
-      console.error("Error deleting patient:", error);
       alert("Error deleting patient!");
     }
   };
 
-  // Function to download data as a PDF
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
     doc.text("Patient List", 14, 10);
@@ -82,24 +68,28 @@ function AllPatients() {
 
   return (
     <div className="container my-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
+      <div className="header-section text-center mb-4">
+        <h3 style={{ color: '#FF9933' }}>All Patients List</h3>
+      </div>
+
+      <div className="d-flex justify-content-between mb-3">
         <div className="d-flex">
           <input 
             type="search" 
             value={searchTerm} 
             onChange={(e) => setSearchTerm(e.target.value)} 
             placeholder="Search by Name or Patient ID" 
-            className="form-control w-50"
+            className="form-control"
           />
           <button className="btn btn-primary mx-2" onClick={handleSearch}>Search</button> 
           <button className="btn btn-secondary" onClick={handleClear}>Clear</button>
         </div>
         <button className="btn btn-success" onClick={handleDownloadPDF}>Download PDF</button>
       </div>
-      <h4 className="text-center">All Patients</h4>
+
       <div className="table-responsive-md">
         <table className="table table-bordered text-center">
-          <thead className="table-dark">
+          <thead style={{ backgroundColor: '#FF9933', color: 'white' }}>
             <tr>
               <th>Patient ID</th>
               <th>Department</th>
@@ -117,11 +107,19 @@ function AllPatients() {
                   <td>{patient.department}</td>
                   <td>{patient.name}</td>
                   <td>{patient.contact}</td>
-                  <td><button className="btn btn-success" onClick={() => handlePrint(patient.patientId)}>Print</button></td>
+                  <td>
+                    <button 
+                      className="btn btn-success" 
+                      onClick={() => handlePrint(patient.patientId)}
+                    >Print</button>
+                  </td>
                   <td>
                     <Link to={`/view/${patient.patientId}`} className='btn btn-primary'>View</Link>
                     <Link to={`/edit/${patient.patientId}`} className="btn btn-info mx-2">Edit</Link>
-                    <button className="btn btn-danger" onClick={() => handleDelete(patient.patientId)}>Delete</button>
+                    <button 
+                      className="btn btn-danger" 
+                      onClick={() => handleDelete(patient.patientId)}
+                    >Delete</button>
                   </td>
                 </tr>
               ))
@@ -133,6 +131,23 @@ function AllPatients() {
           </tbody>
         </table>
       </div>
+
+      <style jsx>{`
+        .btn-primary {
+          background-color: #FF9933;
+          border: none;
+        }
+        .btn-primary:hover {
+          background-color: #cc7a29;
+        }
+        .btn-success {
+          background-color: #28a745;
+        }
+        .table thead {
+          background-color: #FF9933;
+          color: white;
+        }
+      `}</style>
     </div>
   );
 }

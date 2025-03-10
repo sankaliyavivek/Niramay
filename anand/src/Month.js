@@ -1,19 +1,22 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import 'bootstrap/dist/css/bootstrap.min.css';
-const API_URL = process.env.REACT_APP_BACKEND_API_URL
+
+const API_URL = process.env.REACT_APP_BACKEND_API_URL || "https://niramay-mqzo.onrender.com";
 
 function Month() {
   const [monthData, setMonthData] = useState([]);
-  const [year, setYear] = useState("");
-  const [month, setMonth] = useState("");
+  const [year, setYear] = useState('');
+  const [month, setMonth] = useState('');
   const [filteredData, setFilteredData] = useState([]);
 
   // Fetch hospital data from API
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/patients/getall`,{withCredentials:true});
+        const response = await axios.get(`${API_URL}/patients/getall`, { withCredentials: true });
         setMonthData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -40,11 +43,42 @@ function Month() {
     setFilteredData(filtered);
   }, [year, month, monthData]);
 
+  // Clear Filter
+  const handleClear = () => {
+    setYear('');
+    setMonth('');
+    setFilteredData([]);
+  };
+
+  // Download PDF
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    doc.text(`Monthly Patient Statistics (${month}/${year})`, 14, 10);
+
+    const headers = [["Patient ID", "Department", "Name", "Date"]];
+    const data = filteredData.map((item) => [
+      item.patientId,
+      item.department,
+      item.name,
+      new Date(item.date).toLocaleDateString()
+    ]);
+
+    doc.autoTable({
+      startY: 20,
+      head: headers,
+      body: data
+    });
+
+    doc.save(`Monthly-Patients-${month}-${year}.pdf`);
+  };
+
   return (
-    <div className='container-fluid my-5 month'>
+    <div className='container my-5 border'>
       <div className='text-center mb-4'>
-        <h2>Month Statistics</h2>
+        <h2>Monthly Statistics</h2>
       </div>
+
+      {/* Input Fields */}
       <div className='row mb-4'>
         <div className='col-md-4'>
           <input
@@ -70,17 +104,24 @@ function Month() {
             required
           />
         </div>
-        <div className='col-md-4'>
-          <button className='btn btn-primary w-100' onClick={handleMonth}>Search</button>
+        <div className='col-md-4 d-flex gap-2'>
+          <button className='btn' style={{ backgroundColor: '#FF9933', color: '#fff' }} onClick={handleMonth}>
+            Search
+          </button>
+          <button className='btn btn-secondary' onClick={handleClear}>
+            Clear
+          </button>
         </div>
       </div>
-      <div>
-        <table className='table table-striped table-bordered text-center' style={{ width: '100%' }}>
+
+      {/* Data Table */}
+      <div className='table-responsive'>
+        <table className='table table-striped table-bordered text-center'>
           <thead className='table-dark'>
             <tr>
               <th>Patient ID</th>
               <th>Department</th>
-              <th>Name</th>            
+              <th>Name</th>
               <th>Date</th>
             </tr>
           </thead>
@@ -96,12 +137,27 @@ function Month() {
               ))
             ) : (
               <tr>
-                <td colSpan="4" className="text-center text-muted">No data available for the selected month</td>
+                <td colSpan="4" className="text-center text-muted">
+                  No data available for the selected month
+                </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+
+      {/* Download PDF Button */}
+      {filteredData.length > 0 && (
+        <div className='text-end mt-3'>
+          <button 
+            className='btn' 
+            style={{ backgroundColor: '#FF9933', color: '#fff' }} 
+            onClick={handleDownloadPDF}
+          >
+            Download PDF
+          </button>
+        </div>
+      )}
     </div>
   );
 }

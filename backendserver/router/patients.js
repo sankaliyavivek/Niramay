@@ -78,10 +78,11 @@
 
 const express = require('express');
 const router = express.Router();
-const Patients = require('../modal/patients'); 
+const Patients = require('../modal/patients');
+const {Authorization} = require('../middleware/authuser') 
 
 // Add a new patient
-router.post('/patient', async (req, res) => {
+router.post('/patient', Authorization,async (req, res) => {
     try {
         const { department, gender, name, address, age, contact, date } = req.body;
 
@@ -101,7 +102,7 @@ router.post('/patient', async (req, res) => {
 });
 
 // Get all patients
-router.get('/getall', async (req, res) => {
+router.get('/getall', Authorization,async (req, res) => {
     try {
         const allPatients = await Patients.find();
         res.json(allPatients);
@@ -112,7 +113,7 @@ router.get('/getall', async (req, res) => {
 });
 
 // Get a single patient by patientId
-router.get('/getprint/:id', async (req, res) => {
+router.get('/getprint/:id', Authorization,async (req, res) => {
     try {
         const patient = await Patients.findOne({ patientId: req.params.id });
         if (!patient) return res.status(404).json({ message: "Patient not found" });
@@ -125,7 +126,7 @@ router.get('/getprint/:id', async (req, res) => {
 });
 
 // Update patient by patientId
-router.put('/update/:id', async (req, res) => {
+router.put('/update/:id', Authorization,async (req, res) => {
     try {
         const updatedPatient = await Patients.findOneAndUpdate(
             { patientId: req.params.id },
@@ -142,7 +143,7 @@ router.put('/update/:id', async (req, res) => {
 });
 
 // Delete patient by patientId
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete/:id', Authorization,async (req, res) => {
     try {
         const deletedPatient = await Patients.findOneAndDelete({ patientId: req.params.id });
         if (!deletedPatient) return res.status(404).json({ message: "Patient not found" });
@@ -156,7 +157,7 @@ router.delete('/delete/:id', async (req, res) => {
 
 
 
-router.get('/view/:eid', async (req, res) => {
+router.get('/view/:eid', Authorization,async (req, res) => {
     try {
         const patient = await Patients.findOne({ patientId: req.params.eid }); // Corrected
         if (!patient) return res.status(404).json({ message: "Patient not found" });

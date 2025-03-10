@@ -6,7 +6,7 @@ body {
   font-family: "Figtree", "Segoe UI", "Figtree", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  height: 100vh;
+  /* height: 100vh; */
   background: #ffffff;
   font-size: 24px;
 }
@@ -137,14 +137,16 @@ h1 {
     margin: 0px;
   }
  }
- /* +++++++++++++++++++++++++++++++++++++++++++++++++ *//* Navbar Styling */
+ /* +++++++++++++++++++++++++++++++++++++++++++++++++ *//* Navbar Styling *//* Navbar Styling */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #2c3e50;
-  padding: 15px 30px;
+  background: #FF9933;
   color: white;
+  padding: 10px 20px !important;
+  position: relative;
+  z-index: 1;
 }
 
 .navbar-brand {
@@ -158,6 +160,15 @@ h1 {
   gap: 20px;
   margin: 0;
   padding: 0;
+  transition: transform 0.3s ease-in-out;
+}
+
+.nav-links.open {
+  transform: translateX(0);
+}
+
+.btn-none {
+  list-style: none;
 }
 
 .nav-links li {
@@ -173,208 +184,252 @@ h1 {
 }
 
 .nav-links a:hover {
-  background: #34495e;
+  background: #ffc081;
   border-radius: 5px;
 }
 
-.menu-toggle {
-  background: none;
-  border: none;
+.fa-bars-staggered {
   font-size: 24px;
   color: white;
   cursor: pointer;
   display: none;
 }
 
+.nav-brand{
+  color: white !important;
+}
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
     text-align: center;
   }
 
+  .nav-brand {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Center items vertically */
+  }
+
   .nav-links {
-    flex-direction: column;
+    padding: 5px;
+    flex-direction: column; 
     gap: 10px;
-    padding-top: 10px;
+    position: absolute; /* Use fixed positioning to cover the entire screen */
+    top: 60px; /* Adjust based on navbar height */
+    left: 0;
+    background: #FF9933;
+    width: 50%; /* Full width */
+    height: 100vh; 
+    z-index: 1000; /* Ensure it's above other content */
+    transform: translateX(-100%); /* Start off-screen */
+    transition: transform 0.3s ease-in-out; /* Smooth transition */
+    overflow-y: hidden; /* Prevent vertical scrollbar */
   }
 
-  .menu-toggle {
-    display: block;
-  }
+  .nav-links li {
+    border-bottom: 1px solid #f7d6b6;
+    padding: 10px;
 
-  .nav-links {
-    display: none;
   }
 
   .nav-links.open {
-    display: flex;
+    transform: translateX(0); /* Slide in when open */
+  }
+
+  .fa-bars-staggered {
+    display: block;
+    cursor: pointer; /* Add pointer cursor for better UX */
   }
 }
 
 .main-content {
-  flex-grow: 1;
+  /* flex-grow: 1; */
   padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: 0.3s;
-}
-
-.button:hover {
-  background-color: #0056b3;
-}
-
-
-/* Main Content */
-.main-content {
-  flex-grow: 1;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;/* No code was selected, so I will provide a general improvement to the CSS code */
-
-/* Normalize CSS */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* Global Styles */
-body {
-  font-family: "Figtree", "Segoe UI", "Figtree", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  line-height: 1.6;
-  color: #333;
-  background-color: #f4f4f4;
-}
-
-/* Reusable Components */
-.container {
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: 0.3s;
-}
-
-.button:hover {
-  background-color: #0056b3;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .container {
-    margin: 20px auto;
-    padding: 10px;
-  }
-}
-
-/* Add this code to the existing CSS file to improve its structure and readability */
-}
-
-/* Responsive Sidebar */
-@media (max-width: 700px) {
-
-  .main-content {
-    padding-left: 0;
-
-  }
-  
-}
 
 
 
 
 /* ************************************************************************ */
 
-.home-container {
+
+/* ================================
+   Main Container
+================================ */
+.patient-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* min-height: 100vh; */
+}
+
+/* ================================
+   Form Card
+================================ */
+.patient-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(25, 21, 21, 0.1);
+    width: 400px;
+    transition: 0.3s;
+    /* border: 1px solid; */
+    /* width: 100% !important; */
+}
+
+/* .patient-card:hover {
+    transform: translateY(-5px);
+} */
+
+/* ================================
+   Form Title
+================================ */
+.form-title {
+    text-align: center;
+    font-size: 22px;
+    color: #165a72;
+    margin-bottom: 20px;
+}
+
+/* ================================
+   Form Group
+================================ */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+/* Focus Effect */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #165a72;
+    box-shadow: 0 0 10px rgba(22, 90, 114, 0.1);
+}
+
+/* ================================
+   Button
+================================ */
+.form-btn {
+    text-align: center;
+    margin-top: 20px;
+}
+
+button {
+    background-color: #FF9933;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 10px !important
+    ;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* ================================
+   Placeholder Text
+================================ */
+::placeholder {
+    color: #aaa;
+    font-size: 14px;
+}
+
+/* ================================
+   Responsive Design
+================================ */
+@media (max-width: 500px) {
+    .patient-card {
+        width: 100%;
+        /* padding: 20px; */
+    }
+  
+    .form-title{
+      font-size: 20px;
+    }
+    button {
+        width: 100%;
+    }
+}
+
+.section {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #f4f4f4;
 }
 
-.form-container {
-  background: white;
-  padding: 30px;
+.register-form {
+  box-shadow: 0 0 10px rgb(131, 129, 129);
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 350px;
-}
-
-.form-title {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 22px;
-  color: #333;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 500;
-  color: #555;
-}
-
-input,
-select,
-textarea {
+  padding: 20px;
   width: 100%;
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 14px;
+  max-width: 350px;
 }
 
-textarea {
-  resize: none;
-}
-
-.submit-btn {
+.register-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
   width: 100%;
+}
+
+.register-box input {
   padding: 10px;
-  background: #007bff;
-  color: white;
   border: none;
+  border-bottom: 1px solid gray;
+  border-radius: 0px;
+}
+
+.register-box p {
+  font-weight: 600;
+}
+
+.form-button button {
+  border: none;
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
   border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: 0.3s;
+  margin-top: 5px;
 }
 
-.submit-btn:hover {
-  background: #0056b3;
+.form-button button:hover {
+  background-color: #ba830db9;
+  color: black;
 }
 
-input[type="checkbox"] {
-  margin-right: 5px;
+.custom-thead {
+  background-color: #FF9933 !important;
+  color: white !important;
 }

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_BACKEND_API_URL;
-console.log(API_URL);
 
 function Home() {
     const formatDate = (date) => {
@@ -10,7 +9,7 @@ function Home() {
         return `${day}-${month}-${year}`;
     };
 
-    const todayDate = formatDate(new Date().toISOString().split('T')[0]); // DD-MM-YYYY
+    const todayDate = formatDate(new Date().toISOString().split('T')[0]);
 
     const [department, setDepartment] = useState("");
     const [gender, setGender] = useState("");
@@ -18,6 +17,8 @@ function Home() {
     const [address, setAddress] = useState("");
     const [age, setAge] = useState("");
     const [contact, setContact] = useState("");
+    const [isOldPatient, setIsOldPatient] = useState(false);
+    const [selectedDate, setSelectedDate] = useState("");
 
     const handleAdd = async (e) => {
         e.preventDefault();
@@ -27,7 +28,12 @@ function Home() {
             return;
         }
 
-        console.log("Sending data:", { department, name, gender, age, address, contact, todayDate });
+        const finalDate = isOldPatient ? selectedDate : todayDate;
+
+        if (isOldPatient && !selectedDate) {
+            alert("Please select a date for old patient!");
+            return;
+        }
 
         try {
             const response = await axios.post(`${API_URL}/patients/patient`, {
@@ -37,11 +43,20 @@ function Home() {
                 age,
                 address,
                 contact,
-                date: todayDate, // Send formatted date
+                date: finalDate,
             });
 
-            console.log("Server Response:", response.data);
             alert(response.data.message);
+
+            // Reset form
+            setDepartment('');
+            setName('');
+            setGender('');
+            setAge('');
+            setAddress('');
+            setContact('');
+            setIsOldPatient(false);
+            setSelectedDate('');
         } catch (error) {
             console.error("Error adding patient:", error.response?.data || error.message);
             alert("Failed to add patient.");
@@ -49,62 +64,92 @@ function Home() {
     };
 
     return (
-        <div className='home-main'>
-            <div className='Homer'>
-                <div>
-                    <h3 className='text-center w-100'>New Patient</h3>
-                </div>
-                <div>
-                    <form onSubmit={handleAdd}>
-                        <div>
-                            <label>Dept:</label>
-                            <select value={department} onChange={(e) => setDepartment(e.target.value)} className='p-1 my-2'>
-                                <option value="" hidden>Select Department</option>
-                                <option value="Homiopathic">Homiopathic</option>
-                            </select>
-                        </div>
+        <div className='patient-container'>
+            <div className='patient-card'>
+                <h3 className='form-title'>Patient Registration</h3>
 
-                        <div>
-                            <span className='my-3 pe-2'>Full Name:</span>
-                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder='Full Name' />
-                        </div>
+                <form onSubmit={handleAdd}>
+                    <div className='form-group'>
+                        <label>Department</label>
+                        <select value={department} onChange={(e) => setDepartment(e.target.value)}>
+                            <option value="" hidden>Select Department</option>
+                            <option value="Homiopathic">Homiopathic</option>
+                        </select>
+                    </div>
 
-                        <div>
-                            <label>Gender:</label>
-                            <select value={gender} className='p-1' onChange={(e) => setGender(e.target.value)}>
-                                <option value="" hidden>Gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
-                        </div>
+                    <div className='form-group'>
+                        <label>Full Name</label>
+                        <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder='Full Name' />
+                    </div>
 
-                        <div>
-                            <label>Address:</label>
-                            <textarea value={address} rows={2} cols={24} placeholder='Address' className='my-2' onChange={(e) => setAddress(e.target.value)}></textarea>
-                        </div>
+                    <div className='form-group'>
+                        <label>Gender</label>
+                        <select value={gender} onChange={(e) => setGender(e.target.value)}>
+                            <option value="" hidden>Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
 
-                        <div>
-                            <span className='my-2'>Age:</span>
-                            <input type="number" value={age} onChange={(e) => setAge(e.target.value)} placeholder='Age' />
-                        </div>
+                    <div className='form-group'>
+                        <label>Age</label>
+                        <input type="number" value={age} onChange={(e) => setAge(e.target.value)} placeholder='Age' />
+                    </div>
 
-                        <div>
-                            <span className='my-2'>Contact No:</span>
-                            <input type="number" value={contact} onChange={(e) => setContact(e.target.value)} placeholder='Contact No' />
-                        </div>
+                    <div className='form-group'>
+                        <label>Address</label>
+                        <textarea value={address} rows={3} onChange={(e) => setAddress(e.target.value)} placeholder='Address'></textarea>
+                    </div>
 
-                        <div>
-                            <label>Date:</label>
-                            <input type="text" value={todayDate} readOnly />
-                        </div>
+                    <div className='form-group'>
+                        <label>Contact No</label>
+                        <input type="number" value={contact} onChange={(e) => setContact(e.target.value)} placeholder='Contact No' />
+                    </div>
 
-                        <section className='btn'>
-                            <button type="submit btn">
+                    {/* Date Input Section */}
+                    <div className='form-group'>
+                        <label>Date</label>
+                        {isOldPatient ? (
+                            <input 
+                                type="date" 
+                                value={selectedDate} 
+                                onChange={(e) => setSelectedDate(e.target.value)} 
+                            />
+                        ) : (
+                            <input 
+                                type="text" 
+                                value={todayDate} 
+                                readOnly 
+                            />
+                        )}
+                    </div>
+
+                    {/* Submit Button */}
+                    <div className='form-btn'>
+                        <button type="submit">
+                            {isOldPatient ? "Add Old Patient" : "Add Today's Patient"}
+                        </button>
+                    </div>
+
+                    {/* Toggle Buttons */}
+                    <div className='form-btn toggle-btn'>
+                        {!isOldPatient ? (
+                            <button 
+                                type="button" 
+                                onClick={() => setIsOldPatient(true)}
+                            >
+                                Add Old Patient
+                            </button>
+                        ) : (
+                            <button 
+                                type="button" 
+                                onClick={() => setIsOldPatient(false)}
+                            >
                                 Add Today's Patient
                             </button>
-                        </section>
-                    </form>
-                </div>
+                        )}
+                    </div>
+                </form>
             </div>
         </div>
     );
