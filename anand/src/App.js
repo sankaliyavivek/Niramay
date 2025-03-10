@@ -8,7 +8,7 @@ import Month from "./Month";
 import Edit from "./Edit";
 import PatientDetail from "./PatientDetail";
 import "../node_modules/bootstrap/dist/css/bootstrap.css";
-import Register from "./Register";
+
 import Login from "./Login";
 import axios from 'axios';
 
@@ -39,7 +39,7 @@ function App() {
       setShowLoginModal(true);  // ✅ Open modal if no token
       setLoading(false);
     }
-  }, []);
+  }, [handleLogout]);
 
   // ✅ Automatically close modal after login
   useEffect(() => {
@@ -105,7 +105,10 @@ function App() {
             <li><Link to="/all">Patients</Link></li>
             <li><Link to="/month">Monthly</Link></li>
             <li className="text-white">Welcome, {name}</li>
-            <li className="nav-link" onClick={handleLogout} style={{ cursor: 'pointer' }}><a>Logout</a></li>
+            <li className="nav-link" onClick={handleLogout} style={{ cursor: 'pointer' }}>
+              <button className="btn btn-link">Logout</button>
+            </li>
+
           </ul>
         </nav>
       )}
@@ -129,14 +132,14 @@ function App() {
           <div className="modal-content shadow-lg rounded-3">
             <div className="modal-header bg-primary text-white">
               <h5 className="modal-title w-100 text-center">
-                 Welcome to <b>Niramay Clinic</b><br />
+                Welcome to <b>Niramay Clinic</b><br />
                 <small>Please Login First</small>
               </h5>
             </div>
             <div className="modal-body">
               <Login onLoginSuccess={handleLoginSuccess} />
             </div>
-            
+
           </div>
         </div>
       </div>
