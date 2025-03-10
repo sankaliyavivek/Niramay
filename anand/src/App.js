@@ -21,6 +21,26 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+    // ✅ Logout function
+    const handleLogout = async () => {
+      try {
+        await axios.post('http://localhost:9000/user/logout', {}, { withCredentials: true });
+  
+        // ✅ Remove token and username from localStorage
+        localStorage.removeItem('username');
+        localStorage.removeItem('token');
+  
+        // ✅ Instantly update the navbar without refresh
+        setName(null);
+  
+        // ✅ Redirect to Home page
+        navigate('/');
+        setShowLoginModal(true);  // ✅ Open modal again on logout
+      } catch (error) {
+        console.error("Logout failed", error);
+      }
+    }
+
   // ✅ Check token on page load
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -56,25 +76,7 @@ function App() {
     navigate('/');
   }
 
-  // ✅ Logout function
-  const handleLogout = async () => {
-    try {
-      await axios.post('http://localhost:9000/user/logout', {}, { withCredentials: true });
 
-      // ✅ Remove token and username from localStorage
-      localStorage.removeItem('username');
-      localStorage.removeItem('token');
-
-      // ✅ Instantly update the navbar without refresh
-      setName(null);
-
-      // ✅ Redirect to Home page
-      navigate('/');
-      setShowLoginModal(true);  // ✅ Open modal again on logout
-    } catch (error) {
-      console.error("Logout failed", error);
-    }
-  }
 
   // ✅ Toggle Sidebar
   const toggleSidebar = () => {
