@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
 import Home from "./Home";
@@ -21,25 +21,25 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    // ✅ Logout function
-    const handleLogout = async () => {
-      try {
-        await axios.post('http://localhost:9000/user/logout', {}, { withCredentials: true });
-  
-        // ✅ Remove token and username from localStorage
-        localStorage.removeItem('username');
-        localStorage.removeItem('token');
-  
-        // ✅ Instantly update the navbar without refresh
-        setName(null);
-  
-        // ✅ Redirect to Home page
-        navigate('/');
-        setShowLoginModal(true);  // ✅ Open modal again on logout
-      } catch (error) {
-        console.error("Logout failed", error);
-      }
+  // ✅ Logout function
+  const handleLogout = useCallback(async () => {
+    try {
+      await axios.post('http://localhost:9000/user/logout', {}, { withCredentials: true });
+
+      // ✅ Remove token and username from localStorage
+      localStorage.removeItem('username');
+      localStorage.removeItem('token');
+
+      // ✅ Instantly update the navbar without refresh
+      setName(null);
+
+      // ✅ Redirect to Home page
+      navigate('/');
+      setShowLoginModal(true);  // ✅ Open modal again on logout
+    } catch (error) {
+      console.error("Logout failed", error);
     }
+  }, [navigate]);
 
   // ✅ Check token on page load
   useEffect(() => {
@@ -53,20 +53,22 @@ function App() {
           }
         })
         .catch(() => {
+          // ✅ Only call handleLogout if token is invalid
           handleLogout();
         });
     } else {
       setShowLoginModal(true);  // ✅ Open modal if no token
       setLoading(false);
     }
-  }, [handleLogout]);
+    // ✅ No need to add handleLogout in dependency
+  }, []);  
 
   // ✅ Automatically close modal after login
   useEffect(() => {
     if (name) {
       setShowLoginModal(false);  // ✅ Close modal after login instantly
     }
-  }, [name]);  // ✅ Whenever "name" changes, modal closes instantly.
+  }, [name]);  
 
   // ✅ Handle Login Success
   const handleLoginSuccess = (username, token) => {
@@ -75,8 +77,6 @@ function App() {
     setName(username);
     navigate('/');
   }
-
-
 
   // ✅ Toggle Sidebar
   const toggleSidebar = () => {
@@ -110,7 +110,6 @@ function App() {
             <li className="nav-link" onClick={handleLogout} style={{ cursor: 'pointer' }}>
               <button className="btn btn-link">Logout</button>
             </li>
-
           </ul>
         </nav>
       )}
@@ -128,6 +127,7 @@ function App() {
           </Routes>
         </main>
       )}
+
       {/* ✅ Bootstrap Login Modal */}
       <div className={`modal ${showLoginModal ? 'd-block' : 'd-none'}`} tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered">
@@ -141,7 +141,6 @@ function App() {
             <div className="modal-body">
               <Login onLoginSuccess={handleLoginSuccess} />
             </div>
-
           </div>
         </div>
       </div>
