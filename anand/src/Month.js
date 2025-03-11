@@ -25,7 +25,7 @@ function Month() {
     fetchData();
   }, []);
 
-  // Filter function
+  // ✅ Filter Function (Fixed Date Issue)
   const handleMonth = useCallback(() => {
     if (!year || !month) {
       alert("Please enter both year and month!");
@@ -34,24 +34,35 @@ function Month() {
 
     const filtered = monthData.filter((item) => {
       const itemDate = new Date(item.date);
-      return (
-        itemDate.getFullYear().toString() === year &&
-        (itemDate.getMonth() + 1).toString() === month
-      );
+
+      // Convert both month and year to string and add leading zero if needed
+      const itemMonth = String(itemDate.getMonth() + 1).padStart(2, '0'); // Ensure '01', '02' format
+      const itemYear = String(itemDate.getFullYear());
+
+      return itemYear === year && itemMonth === String(month).padStart(2, '0');
     });
 
     setFilteredData(filtered);
+
+    if (filtered.length === 0) {
+      alert("No data found for this month.");
+    }
   }, [year, month, monthData]);
 
-  // Clear Filter
+  // ✅ Clear Filter
   const handleClear = () => {
     setYear('');
     setMonth('');
     setFilteredData([]);
   };
 
-  // Download PDF
+  // ✅ Download PDF
   const handleDownloadPDF = () => {
+    if (filteredData.length === 0) {
+      alert("No data available to download.");
+      return;
+    }
+
     const doc = new jsPDF();
     doc.text(`Monthly Patient Statistics (${month}/${year})`, 14, 10);
 
