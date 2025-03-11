@@ -3,7 +3,7 @@ const User = require('../modal/user');
 
 const Authorization = async (req, res, next) => {
     try {
-        const token = req.cookies.token; // Assuming token is in cookies
+        const token = req.cookies.token;
         if (!token) {
             return res.status(401).json({ message: "Access Denied! No Token Provided" });
         }
@@ -20,7 +20,6 @@ const Authorization = async (req, res, next) => {
             return res.status(404).json({ message: "User Not Found" });
         }
 
-        // Attach user to request object (Optional)
         req.user = user;
         next();
     } catch (error) {

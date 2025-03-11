@@ -11,11 +11,7 @@ function Login({ onLoginSuccess }) {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(
-                `${API_URL}/user/login`,
-                { email, password },
-                { withCredentials: true }
-            );
+            const response = await axios.post(`${API_URL}/user/login`,{ email, password },{ withCredentials: true });
             
             localStorage.setItem('username', response.data.user.name);
             localStorage.setItem('token', response.data.token);

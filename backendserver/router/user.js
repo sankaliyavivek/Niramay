@@ -50,23 +50,22 @@ router.post('/login', async (req, res) => {
         // Generate JWT token
         const token = jwt.sign(
             { id: user._id },
-            process.env.JWT_SECRET ,
+            process.env.JWT_SECRET,
             { expiresIn: '24h' }
         );
 
-        // Set token in HTTP-Only cookie
+        // ✅ Set token in HTTP-Only cookie
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // Set true for production
+            secure: true, // This is mandatory when using HTTPS
             sameSite: 'none', // Allow cross-origin cookies
-            maxAge: 24 * 60 * 60 * 1000
+            maxAge: 24 * 60 * 60 * 1000 // 1 Day Expiry
         });
 
-        res.status(200).json({ 
-            message: 'Logged in successfully', 
-            user: { name: user.name },
-            token // Send token explicitly
-        }); 
+        res.status(200).json({
+            message: 'Logged in successfully',
+            user: { name: user.name }
+        });
 
     } catch (error) {
         console.error(error.message);
@@ -78,7 +77,7 @@ router.post('/logout', (req, res) => {
     try {
         res.cookie("token", "", {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production", 
+            secure: true,
             sameSite: 'none',
             expires: new Date(0)
         });
@@ -110,6 +109,5 @@ router.get('/verify', async (req, res) => {
         res.status(401).json({ message: 'Unauthorized - Invalid Token' });
     }
 });
-
 
 module.exports = router;
