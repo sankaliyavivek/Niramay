@@ -25,7 +25,16 @@ function Month() {
     fetchData();
   }, []);
 
-  // ✅ Filter Function (Fixed Date Issue)
+  // ✅ Function to convert MongoDB Date to Indian Date Format (dd/mm/yyyy)
+  const formatIndianDate = (dateString) => {
+    const date = new Date(dateString);  // Convert to Date object
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // +1 because month starts from 0
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  // ✅ Function to filter data based on Month & Year
   const handleMonth = useCallback(() => {
     if (!year || !month) {
       alert("Please enter both year and month!");
@@ -33,12 +42,8 @@ function Month() {
     }
 
     const filtered = monthData.filter((item) => {
-      // ✅ Convert Indian date (dd/mm/yyyy) to Date object
-      const splitDate = item.date.split('/');
-      const itemDate = new Date(`${splitDate[2]}-${splitDate[1]}-${splitDate[0]}`);  // yyyy-mm-dd
-
-      // ✅ Extract month and year
-      const itemMonth = String(itemDate.getMonth() + 1).padStart(2, '0'); // Ensure '01', '02' format
+      const itemDate = new Date(item.date); // Convert MongoDB date to Date object
+      const itemMonth = String(itemDate.getMonth() + 1).padStart(2, '0');
       const itemYear = String(itemDate.getFullYear());
 
       return itemYear === year && itemMonth === String(month).padStart(2, '0');
@@ -73,7 +78,7 @@ function Month() {
       item.patientId,
       item.department,
       item.name,
-      item.date  // Indian date format
+      formatIndianDate(item.date)
     ]);
 
     doc.autoTable({
@@ -145,7 +150,7 @@ function Month() {
                   <td>{item.patientId}</td>
                   <td>{item.department}</td>
                   <td>{item.name}</td>
-                  <td>{item.date}</td>
+                  <td>{formatIndianDate(item.date)}</td>
                 </tr>
               ))
             ) : (
