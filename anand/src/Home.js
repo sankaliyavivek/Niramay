@@ -4,12 +4,22 @@ import axios from 'axios';
 const API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 function Home() {
+    // Function to convert date to Indian Date Format
     const formatDate = (date) => {
         const [year, month, day] = date.split('-');
-        return `${day}-${month}-${year}`;
+        return `${day}/${month}/${year}`;  // Convert to DD/MM/YYYY
     };
 
-    const todayDate = formatDate(new Date().toISOString().split('T')[0]);
+    // Function to get today's date in Indian Date Format
+    const getIndianDateFormat = () => {
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const year = today.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
+
+    const todayDate = getIndianDateFormat();
 
     const [department, setDepartment] = useState("");
     const [gender, setGender] = useState("");
@@ -30,7 +40,8 @@ function Home() {
             return;
         }
 
-        const finalDate = isOldPatient ? selectedDate : todayDate;
+        // Final date based on patient type
+        const finalDate = isOldPatient ? formatDate(selectedDate) : todayDate;
 
         if (isOldPatient && !selectedDate) {
             alert("Please select a date for old patient!");
@@ -49,9 +60,9 @@ function Home() {
             },
             {
                 headers: {
-                    Authorization: `Bearer ${token}` // Pass token here
+                    Authorization: `Bearer ${token}`
                 },
-                withCredentials:true
+                withCredentials: true
             });
 
             alert(response.data.message);
