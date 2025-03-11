@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Patients = require('../modal/patients');
-const {Authentication} = require('../middleware/authuser') 
+const {Authorization} = require('../middleware/authuser') 
 
 // Add a new patient
-router.post('/patient',Authentication,async (req, res) => {
+router.post('/patient',Authorization,async (req, res) => {
     try {
         const { department, gender, name, address, age, contact, date } = req.body;
 
@@ -65,7 +65,7 @@ router.put('/update/:id',async (req, res) => {
 });
 
 // Delete patient by patientId
-router.delete('/delete/:id',Authentication,async (req, res) => {
+router.delete('/delete/:id',async (req, res) => {
     try {
         const deletedPatient = await Patients.findOneAndDelete({ patientId: req.params.id });
         if (!deletedPatient) return res.status(404).json({ message: "Patient not found" });
