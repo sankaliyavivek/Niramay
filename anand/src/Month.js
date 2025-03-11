@@ -12,7 +12,7 @@ function Month() {
   const [month, setMonth] = useState('');
   const [filteredData, setFilteredData] = useState([]);
 
-  // Fetch hospital data from API
+  // ✅ Fetch hospital data from API
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -33,9 +33,11 @@ function Month() {
     }
 
     const filtered = monthData.filter((item) => {
-      const itemDate = new Date(item.date);
+      // ✅ Convert Indian date (dd/mm/yyyy) to Date object
+      const splitDate = item.date.split('/');
+      const itemDate = new Date(`${splitDate[2]}-${splitDate[1]}-${splitDate[0]}`);  // yyyy-mm-dd
 
-      // Convert both month and year to string and add leading zero if needed
+      // ✅ Extract month and year
       const itemMonth = String(itemDate.getMonth() + 1).padStart(2, '0'); // Ensure '01', '02' format
       const itemYear = String(itemDate.getFullYear());
 
@@ -71,7 +73,7 @@ function Month() {
       item.patientId,
       item.department,
       item.name,
-      new Date(item.date).toLocaleDateString()
+      item.date  // Indian date format
     ]);
 
     doc.autoTable({
@@ -89,7 +91,7 @@ function Month() {
         <h2>Monthly Statistics</h2>
       </div>
 
-      {/* Input Fields */}
+      {/* ✅ Input Fields */}
       <div className='row mb-4'>
         <div className='col-md-4'>
           <input
@@ -125,7 +127,7 @@ function Month() {
         </div>
       </div>
 
-      {/* Data Table */}
+      {/* ✅ Data Table */}
       <div className='table-responsive'>
         <table className='table table-striped table-bordered text-center'>
           <thead className='table-dark'>
@@ -143,7 +145,7 @@ function Month() {
                   <td>{item.patientId}</td>
                   <td>{item.department}</td>
                   <td>{item.name}</td>
-                  <td>{new Date(item.date).toLocaleDateString()}</td>
+                  <td>{item.date}</td>
                 </tr>
               ))
             ) : (
@@ -157,7 +159,7 @@ function Month() {
         </table>
       </div>
 
-      {/* Download PDF Button */}
+      {/* ✅ Download PDF Button */}
       {filteredData.length > 0 && (
         <div className='text-end mt-3'>
           <button 
