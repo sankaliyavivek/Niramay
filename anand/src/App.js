@@ -48,30 +48,31 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.get(` ${API_URL}/user/verify`, { withCredentials: true })
+      axios.get(`${API_URL}/user/verify`, { withCredentials: true })
         .then(res => {
           if (res.status === 200) {
             setName(localStorage.getItem('username'));
-            setLoading(false);
           }
         })
         .catch(() => {
-          // ✅ Only call handleLogout if token is invalid
           handleLogout();
+        })
+        .finally(() => {
+          setLoading(false);
         });
     } else {
-      setShowLoginModal(true);  // ✅ Open modal if no token
+      setShowLoginModal(true);
       setLoading(false);
     }
-    // ✅ No need to add handleLogout in dependency
-  }, [handleLogout]);  
+  }, [handleLogout]);
+
 
   // ✅ Automatically close modal after login
   useEffect(() => {
     if (name) {
       setShowLoginModal(false);  // ✅ Close modal after login instantly
     }
-  }, [name]);  
+  }, [name]);
 
   // ✅ Handle Login Success
   const handleLoginSuccess = (username, token) => {
@@ -90,7 +91,7 @@ function App() {
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-        <div className="spinner-border text-primary" role="status">
+        <div className="spinner-border text-primary" role="token">
           <span className="visually-hidden">Loading...</span>
         </div>
       </div>
@@ -136,7 +137,7 @@ function App() {
       <div className={`modal ${showLoginModal ? 'd-block' : 'd-none'}`} tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content shadow-lg rounded-3">
-            <div className="modal-header text-white" style={{  background:' #FF9933'}}>
+            <div className="modal-header text-white" style={{ background: ' #FF9933' }}>
               <h5 className="modal-title w-100 text-center" >
                 Welcome to <b>Niramay Clinic</b><br />
                 <small>Please Login First</small>
