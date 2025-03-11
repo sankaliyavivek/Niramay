@@ -63,7 +63,7 @@ function App() {
       setLoading(false);
     }
     // ✅ No need to add handleLogout in dependency
-  }, []);  
+  }, [handleLogout]);  
 
   // ✅ Automatically close modal after login
   useEffect(() => {
