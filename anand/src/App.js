@@ -48,7 +48,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.get(`${API_URL}/user/verify`, { withCredentials: true })
+      axios.get(` ${API_URL}/user/verify`, { withCredentials: true })
         .then(res => {
           if (res.status === 200) {
             setName(localStorage.getItem('username'));
