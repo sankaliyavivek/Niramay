@@ -1,58 +1,63 @@
 import React, { useState } from 'react'
-import axios from  'axios'
+import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 
-function Login() {
-      const [email, setEmail] = useState('');
-        const [password, setPassword] = useState('');
+function Login({ onLoginSuccess }) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-            const navigate = useNavigate();
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(
+                'http://localhost:9000/user/login',
+                { email, password },
+                { withCredentials: true }
+            );
+            
+            localStorage.setItem('username', response.data.user.name);
+            localStorage.setItem('token', response.data.token);
 
-        const handelLogin = async(e) => {
-            e.preventDefault();
-               const data = await axios.post('http://localhost:9000/user/login',
-                {email,password},
-                { withCredentials: true}
-               )
-            //    console.log(data.data.user.name)
-               localStorage.setItem('username',data.data.user.name)
-               alert('login successfully!')
-               navigate('/')
-               window.location.reload();
+            // ✅ Pass data to App.js
+            onLoginSuccess(response.data.user.name, response.data.token);
 
+            alert('Login successfully!');
+        } catch (error) {
+            alert('Invalid email or password');
         }
-  return (
-    <div>
-       <div className='register-form'>
-                <form onSubmit={handelLogin}>
+    }
+
+    return (
+        <div>
+            <div className='register-form'>
+                <form onSubmit={handleLogin}>
                     <div className='register-box'>
                         <h2>Login</h2>
 
                         <div>
                             <p>Email</p>
-                            <input type="email" name="" placeholder='enter your email'
+                            <input type="email" placeholder='Enter your email'
                                 value={email}
-                                onChange={(e) => { setEmail(e.target.value) }}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
 
-
-                        <div className=''>
+                        <div>
                             <p>Password</p>
                             <input type='password' placeholder='Enter your password'
                                 value={password}
-                                onChange={(e) => { setPassword(e.target.value) }}
-                            ></input>
-
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
                         </div>
+
                         <div className='form-button'>
-                            <button>Sign Up</button>
+                            <button type="submit" >Login</button>
                         </div>
                     </div>
                 </form>
             </div>
-    </div>
-  )
+        </div>
+    )
 }
 
-export default Login
+export default Login;

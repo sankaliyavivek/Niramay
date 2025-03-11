@@ -4,7 +4,6 @@ const User = require('../modal/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-
 router.post('/register', async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -20,76 +19,90 @@ router.post('/register', async (req, res) => {
             email,
             password: hashedPassword
         });
-        console.log(user)
-        res.json({ message: 'user created successfully', user });
 
+        res.status(201).json({ message: 'User created successfully', user });
 
-
-    }
-    catch (err) {
+    } catch (err) {
         console.error(err.message);
+        res.status(500).json({ message: 'Server Error' });
     }
-
-})
+});
 
 router.post('/login', async (req, res) => {
     try {
-        const { email, password } = req.body
+        const { email, password } = req.body;
 
         if (!email || !password) {
-            return res.status(400).json({ msg: 'Please enter both email and password' })
+            return res.status(400).json({ msg: 'Please enter both email and password' });
         }
 
-        const user = await User.findOne({ email })
+        const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ msg: 'Please enter correct email' })
+            return res.status(400).json({ msg: 'Invalid email or password' });
         }
 
-        const isMatch = await bcrypt.compare(password, user.password)
+        const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(401).json({ message: "Invalid password" })  // ✅ Add RETURN to stop execution
+            return res.status(401).json({ message: "Invalid email or password" });
         }
 
+        // Generate JWT token
         const token = jwt.sign(
-            {
-                id: user._id,
-                email: user.email
-            },
-            process.env.JWT_SECRET ,
+            { id: user._id },
+            process.env.JWT_SECRET,
             { expiresIn: '24h' }
         );
 
-        res.cookie('token', token, {
+        // Set token in HTTP-Only cookie
+        res.cookie("token", token, {
             httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000,
-            secure: false // ✅ Change this to true in production
+            secure: false, // Set to true in production
+            sameSite: 'lax',
+            maxAge: 24 * 60 * 60 * 1000 
         });
 
-        return res.status(200).json({ 
+        res.status(200).json({ 
             message: 'Logged in successfully', 
-            user: { name: user.name } 
-        });
+            user: { name: user.name },
+            token // Send token explicitly
+        }); 
 
     } catch (error) {
         console.error(error.message);
-        return res.status(500).json({ message: 'Server Error' })
+        res.status(500).json({ message: 'Server Error' });
     }
-})
+});
 
-
-router.post('/logout', async (req, res) => {
+router.post('/logout', (req, res) => {
     try {
-        res.clearCookie('token', {
+        res.cookie("token", "", {
             httpOnly: true,
-            secure: false,  // ✅ Turn off secure (since localhost is HTTP)
-            sameSite: 'lax', // ✅ Use 'lax' for local testing
-            path: '/'
+            secure: process.env.NODE_ENV === "production", 
+            sameSite: 'none',
+            expires: new Date(0)
         });
-        return res.status(200).json({ message: 'Logged out successfully' });
 
+        res.status(200).json({ message: 'User logged out successfully' });
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
     }
-})
+});
+
+router.get('/verify', async (req, res) => {
+    try {
+        const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+        if (!token) return res.status(401).json({ message: 'Unauthorized' });
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id);
+
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        res.status(200).json({ user });
+    } catch (error) {
+        res.status(401).json({ message: 'Unauthorized' });
+    }
+});
 
 module.exports = router;

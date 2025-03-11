@@ -23,6 +23,8 @@ function Home() {
     const handleAdd = async (e) => {
         e.preventDefault();
 
+        const token = localStorage.getItem('token');
+
         if (!department || !name || !gender || !age || !address || !contact) {
             alert("All fields are required!");
             return;
@@ -44,6 +46,12 @@ function Home() {
                 address,
                 contact,
                 date: finalDate,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}` // Pass token here
+                },
+                withCredentials:true
             });
 
             alert(response.data.message);
@@ -64,7 +72,7 @@ function Home() {
     };
 
     return (
-        <div className='patient-container'>
+        <div className='patient-container mt-3'>
             <div className='patient-card'>
                 <h3 className='form-title'>Patient Registration</h3>
 

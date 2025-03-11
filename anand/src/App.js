@@ -8,6 +8,7 @@ import Month from "./Month";
 import Edit from "./Edit";
 import PatientDetail from "./PatientDetail";
 import "../node_modules/bootstrap/dist/css/bootstrap.css";
+import Register from './Register';
 
 import Login from "./Login";
 import axios from 'axios';
@@ -32,6 +33,7 @@ function App() {
 
       // ✅ Instantly update the navbar without refresh
       setName(null);
+
 
       // ✅ Redirect to Home page
       navigate('/');
@@ -108,7 +110,7 @@ function App() {
             <li><Link to="/month">Monthly</Link></li>
             <li className="text-white">Welcome, {name}</li>
             <li className="nav-link" onClick={handleLogout} style={{ cursor: 'pointer' }}>
-              <button className="btn btn-link">Logout</button>
+              Logout
             </li>
           </ul>
         </nav>
@@ -124,6 +126,7 @@ function App() {
             <Route path="/month" element={<Month />} />
             <Route path="/edit/:id" element={<Edit />} />
             <Route path="/view/:eid" element={<PatientDetail />} />
+            <Route path="/register" element={<Register></Register>}></Route>
           </Routes>
         </main>
       )}
@@ -132,8 +135,8 @@ function App() {
       <div className={`modal ${showLoginModal ? 'd-block' : 'd-none'}`} tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content shadow-lg rounded-3">
-            <div className="modal-header bg-primary text-white">
-              <h5 className="modal-title w-100 text-center">
+            <div className="modal-header text-white" style={{  background:' #FF9933'}}>
+              <h5 className="modal-title w-100 text-center" >
                 Welcome to <b>Niramay Clinic</b><br />
                 <small>Please Login First</small>
               </h5>

@@ -1,32 +1,28 @@
 const jwt = require('jsonwebtoken');
 const User = require('../modal/user');
 
-const Authorization = async (req, res, next) => {
+const Authentication = async (req, res, next) => {
     try {
-        const token = req.cookies.token; // Assuming token is in cookies
+        const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+
+
         if (!token) {
-            return res.status(401).json({ message: "Access Denied! No Token Provided" });
+            return res.status(401).json({ error: "Please login first" });
         }
 
-        // Verify JWT Token
-        const verified = jwt.verify(token, process.env.JWT_SECRET);
-        if (!verified) {
-            return res.status(401).json({ message: "Unauthorized Access! Invalid Token" });
-        }
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id);
 
-        // Find the user based on token ID
-        const user = await User.findById(verified.id);
         if (!user) {
-            return res.status(404).json({ message: "User Not Found" });
+            return res.status(404).json({ error: "User not found. Please login again." });
         }
 
-        // Attach user to request object (Optional)
         req.user = user;
         next();
     } catch (error) {
-        console.error("Authorization Error:", error);
-        res.status(401).json({ message: "Authorization Failed" });
+        console.error("Authentication Error:", error);
+        return res.status(401).json({ error: "Invalid token. Please login again." });
     }
-}
+};
 
-module.exports = { Authorization };
+module.exports = { Authentication };
