@@ -21,14 +21,20 @@ function AllPatients() {
       .catch(error => console.error("Error fetching patient data:", error));
   }, []);
 
-  const handleSearch = () => {
-    if (!searchTerm) return;
-    const filtered = patients.filter(patient => 
-      patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      patient.patientId.includes(searchTerm)
+  const handleSearch = (value) => {
+    if (!value) {
+      setFilteredPatients(patients);
+      return;
+    }
+
+    const filtered = patients.filter(patient =>
+      patient.name.toLowerCase().includes(value.toLowerCase()) ||
+      patient.patientId.toString().includes(value)
     );
+
     setFilteredPatients(filtered);
   };
+
 
   const handleClear = () => {
     setSearchTerm('');
@@ -74,14 +80,18 @@ function AllPatients() {
 
       <div className="d-flex justify-content-between mb-3">
         <div className="d-flex">
-          <input 
-            type="search" 
-            value={searchTerm} 
-            onChange={(e) => setSearchTerm(e.target.value)} 
-            placeholder="Search by Name or Patient ID" 
+          <input
+            type="search"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              handleSearch(e.target.value);
+            }}
+            placeholder="Search by Name or Patient ID"
             className="form-control"
           />
-          <button className="btn btn-primary mx-2" onClick={handleSearch}>Search</button> 
+
+          <button className="btn btn-primary mx-2" onClick={handleSearch}>Search</button>
           <button className="btn btn-secondary" onClick={handleClear}>Clear</button>
         </div>
         <button className="btn btn-success" onClick={handleDownloadPDF}>Download PDF</button>
@@ -108,16 +118,16 @@ function AllPatients() {
                   <td>{patient.name}</td>
                   <td>{patient.contact}</td>
                   <td>
-                    <button 
-                      className="btn btn-success" 
+                    <button
+                      className="btn btn-success"
                       onClick={() => handlePrint(patient.patientId)}
                     >Print</button>
                   </td>
                   <td>
                     <Link to={`/view/${patient.patientId}`} className='btn btn-primary'>View</Link>
                     <Link to={`/edit/${patient.patientId}`} className="btn btn-info mx-2">Edit</Link>
-                    <button 
-                      className="btn btn-danger" 
+                    <button
+                      className="btn btn-danger"
                       onClick={() => handleDelete(patient.patientId)}
                     >Delete</button>
                   </td>

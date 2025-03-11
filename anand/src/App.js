@@ -110,7 +110,7 @@ function App() {
             <li><Link to="/">Home</Link></li>
             <li><Link to="/all">Patients</Link></li>
             <li><Link to="/month">Monthly</Link></li>
-            <li className="text-white">Welcome, {name}</li>
+            <li className="text-white">{name}</li>
             <li className="nav-link" onClick={handleLogout} style={{ cursor: 'pointer' }}>
               Logout
             </li>
