@@ -9,7 +9,6 @@ import Edit from "./Edit";
 import PatientDetail from "./PatientDetail";
 import "../node_modules/bootstrap/dist/css/bootstrap.css";
 import Register from './Register';
-
 import Login from "./Login";
 import axios from 'axios';
 
@@ -25,7 +24,7 @@ function App() {
   // ✅ Logout function
   const handleLogout = useCallback(async () => {
     try {
-      await axios.post('http://localhost:9000/user/logout', {}, { withCredentials: true });
+      await axios.post('https://localhost:9000/user/logout', {}, { withCredentials: true });
 
       // ✅ Remove token and username from localStorage
       localStorage.removeItem('username');
@@ -34,10 +33,9 @@ function App() {
       // ✅ Instantly update the navbar without refresh
       setName(null);
 
-
       // ✅ Redirect to Home page
       navigate('/');
-      setShowLoginModal(true);  // ✅ Open modal again on logout
+      setShowLoginModal(true);
     } catch (error) {
       console.error("Logout failed", error);
     }
@@ -47,7 +45,10 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.get('http://localhost:9000/user/verify', { withCredentials: true })
+      axios.get('https://your-backend-url/user/verify', {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      })
         .then(res => {
           if (res.status === 200) {
             setName(localStorage.getItem('username'));
@@ -55,22 +56,20 @@ function App() {
           }
         })
         .catch(() => {
-          // ✅ Only call handleLogout if token is invalid
           handleLogout();
         });
     } else {
-      setShowLoginModal(true);  // ✅ Open modal if no token
+      setShowLoginModal(true);
       setLoading(false);
     }
-    // ✅ No need to add handleLogout in dependency
-  }, [handleLogout]);  
+  }, [handleLogout]);
 
   // ✅ Automatically close modal after login
   useEffect(() => {
     if (name) {
-      setShowLoginModal(false);  // ✅ Close modal after login instantly
+      setShowLoginModal(false);
     }
-  }, [name]);  
+  }, [name]);
 
   // ✅ Handle Login Success
   const handleLoginSuccess = (username, token) => {
@@ -85,7 +84,7 @@ function App() {
     setIsSidebarOpen(!isSidebarOpen);
   }
 
-  // ✅ Show Loading Spinner while checking token
+  // ✅ Show Loading Spinner
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
@@ -98,10 +97,10 @@ function App() {
 
   return (
     <div className="app-container">
-      {/* ✅ Show Navbar only if user is logged in */}
       {name && (
         <nav className="navbar">
-          <div className="navbar-brand nav-brand">Niramy Clinic
+          <div className="navbar-brand nav-brand">
+            Niramy Clinic
             <li className="btn-none" onClick={toggleSidebar}><i className="fa-solid fa-bars-staggered"></i></li>
           </div>
           <ul className={`nav-links ${isSidebarOpen ? 'open' : ''}`}>
@@ -116,7 +115,6 @@ function App() {
         </nav>
       )}
 
-      {/* ✅ Page Content */}
       {name && (
         <main className="main-content">
           <Routes>
@@ -126,17 +124,16 @@ function App() {
             <Route path="/month" element={<Month />} />
             <Route path="/edit/:id" element={<Edit />} />
             <Route path="/view/:eid" element={<PatientDetail />} />
-            <Route path="/register" element={<Register></Register>}></Route>
+            <Route path="/register" element={<Register />} />
           </Routes>
         </main>
       )}
 
-      {/* ✅ Bootstrap Login Modal */}
       <div className={`modal ${showLoginModal ? 'd-block' : 'd-none'}`} tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content shadow-lg rounded-3">
-            <div className="modal-header text-white" style={{  background:' #FF9933'}}>
-              <h5 className="modal-title w-100 text-center" >
+            <div className="modal-header text-white" style={{ background: '#FF9933' }}>
+              <h5 className="modal-title w-100 text-center">
                 Welcome to <b>Niramay Clinic</b><br />
                 <small>Please Login First</small>
               </h5>
