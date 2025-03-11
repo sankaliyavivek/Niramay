@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+const API_URL = process.env.REACT_APP_BACKEND_API_URL;
 const PatientDetail = () => {
     const { eid } = useParams();
     const [patient, setPatient] = useState(null);
@@ -10,7 +11,7 @@ const PatientDetail = () => {
     useEffect(() => {
         const fetchPatient = async () => {
             try {
-                const response = await fetch(`http://localhost:9000/patients/view/${eid}`);
+                const response = await fetch(`${API_URL}/patients/view/${eid}`);
                 if (!response.ok) {
                     throw new Error("Patient not found");
                 }
