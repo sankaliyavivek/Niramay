@@ -1,14 +1,26 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import moment from 'moment';
 
 const API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 function Home() {
-
+    // Function to convert date to Indian Date Format
+    const formatDate = (date) => {
+        const [year, month, day] = date.split('-');
+        return `${day}/${month}/${year}`;  // Convert to DD/MM/YYYY
+    };
 
     // Function to get today's date in Indian Date Format
-    const formatDateIndian = (date) => moment(date).format("DD-MM-YYYY");
+    const getIndianDateFormat = () => {
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const year = today.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
+
+    const todayDate = getIndianDateFormat();
+
     const [department, setDepartment] = useState("");
     const [gender, setGender] = useState("");
     const [name, setName] = useState("");
@@ -28,15 +40,12 @@ function Home() {
             return;
         }
 
-
         // Final date based on patient type
-        let finalDate = new Date(); // Default to today's date
-        if (isOldPatient) {
-            if (!selectedDate) {
-                alert("Please select a date for old patient!");
-                return;
-            }
-            finalDate = new Date(selectedDate); // ✅ Now it's allowed
+        const finalDate = isOldPatient ? formatDate(selectedDate) : todayDate;
+
+        if (isOldPatient && !selectedDate) {
+            alert("Please select a date for old patient!");
+            return;
         }
 
         try {
@@ -49,12 +58,12 @@ function Home() {
                 contact,
                 date: finalDate,
             },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    },
-                    withCredentials: true
-                });
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                withCredentials: true
+            });
 
             alert(response.data.message);
 
@@ -120,16 +129,16 @@ function Home() {
                     <div className='form-group'>
                         <label>Date</label>
                         {isOldPatient ? (
-                            <input
-                                type="date"
-                                value={selectedDate}
-                                onChange={(e) => setSelectedDate(e.target.value)}
+                            <input 
+                                type="date" 
+                                value={selectedDate} 
+                                onChange={(e) => setSelectedDate(e.target.value)} 
                             />
                         ) : (
-                            <input
-                                type="text"
-                                value={formatDateIndian(new Date())}
-                                readOnly
+                            <input 
+                                type="text" 
+                                value={todayDate} 
+                                readOnly 
                             />
                         )}
                     </div>
@@ -144,15 +153,15 @@ function Home() {
                     {/* Toggle Buttons */}
                     <div className='form-btn toggle-btn'>
                         {!isOldPatient ? (
-                            <button
-                                type="button"
+                            <button 
+                                type="button" 
                                 onClick={() => setIsOldPatient(true)}
                             >
                                 Add Old Patient
                             </button>
                         ) : (
-                            <button
-                                type="button"
+                            <button 
+                                type="button" 
                                 onClick={() => setIsOldPatient(false)}
                             >
                                 Add Today's Patient

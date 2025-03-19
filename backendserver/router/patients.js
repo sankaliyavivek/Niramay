@@ -2,20 +2,17 @@ const express = require('express');
 const router = express.Router();
 const Patients = require('../modal/patients');
 const {Authorization} = require('../middleware/authuser') 
-const moment = require('moment');
 
 // Add a new patient
 router.post('/patient',Authorization,async (req, res) => {
     try {
         const { department, gender, name, address, age, contact, date } = req.body;
 
-        // Ensure date is formatted in Indian style (DD-MM-YYYY)
-        date = moment(date, ["DD-MM-YYYY", "YYYY-MM-DD"]).format("DD-MM-YYYY");
         if (!department || !name || !gender || !age || !address || !contact || !date) {
             return res.status(400).json({ message: "All fields are required!" });
         }
 
-        const newPatient = new Patients({ department, gender, name, age, address, contact, date: formattedDate, });
+        const newPatient = new Patients({ department, gender, name, age, address, contact, date });
 
         await newPatient.save();
 
@@ -52,10 +49,6 @@ router.get('/getprint/:id',async (req, res) => {
 
 // Update patient by patientId
 router.put('/update/:id',async (req, res) => {
-      // Ensure date format is in DD-MM-YYYY before updating
-      if (date) {
-        date = moment(date, ["DD-MM-YYYY", "YYYY-MM-DD"]).format("DD-MM-YYYY");
-    }
     try {
         const updatedPatient = await Patients.findOneAndUpdate(
             { patientId: req.params.id },

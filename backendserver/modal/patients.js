@@ -60,11 +60,11 @@ PatientsSchema.pre("save", async function (next) {
             return next(err);
         }
     }
-    if (this.date) {
-        this.date = moment(this.date, ["DD-MM-YYYY", "YYYY-MM-DD"]).format("DD-MM-YYYY");
-    }
 
-   
+    // ✅ Automatically format the date to DD/MM/YYYY
+    if (this.date) {
+        this.date = moment(this.date).format("DD/MM/YYYY");
+    }
 
     next();
 });
