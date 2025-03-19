@@ -41,7 +41,8 @@ const PatientDetail = () => {
                 <p><strong>Department:</strong> {patient.department}</p>
                 <p><strong>Address:</strong> {patient.address}</p>
                 <p><strong>Contact:</strong> {patient.contact}</p>
-                <p><strong>Date:</strong> {new Date(patient.date).toLocaleDateString()}</p>
+                <p><strong>Date:</strong> {patient.date ? new Date(patient.date).toLocaleDateString("en-IN") : "N/A"}</p>
+
             </div>
         </div>
     );
