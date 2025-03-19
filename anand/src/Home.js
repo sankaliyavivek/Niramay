@@ -137,7 +137,7 @@ function Home() {
                         ) : (
                             <input 
                                 type="text" 
-                                value={todayDate} 
+                                value={formatDateIndian(new Date())} 
                                 readOnly 
                             />
                         )}
