@@ -5,21 +5,14 @@ const API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 function Home() {
     // Function to convert date to Indian Date Format
-    const formatDate = (date) => {
-        const [year, month, day] = date.split('-');
-        return `${day}/${month}/${year}`;  // Convert to DD/MM/YYYY
-    };
+    // const formatDate = (date) => {
+    //     const [year, month, day] = date.split('-');
+    //     return `${day}/${month}/${year}`;  // Convert to DD/MM/YYYY
+    // };
 
     // Function to get today's date in Indian Date Format
-    const getIndianDateFormat = () => {
-        const today = new Date();
-        const day = String(today.getDate()).padStart(2, '0');
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const year = today.getFullYear();
-        return `${day}/${month}/${year}`;
-    };
-
-    const todayDate = getIndianDateFormat();
+    // Get today's date in DD-MM-YYYY format for Indian standard
+    const todayDate = moment().format("DD-MM-YYYY");
 
     const [department, setDepartment] = useState("");
     const [gender, setGender] = useState("");
@@ -41,7 +34,8 @@ function Home() {
         }
 
         // Final date based on patient type
-        const finalDate = isOldPatient ? formatDate(selectedDate) : todayDate;
+        const finalDate = isOldPatient ? moment(selectedDate, "YYYY-MM-DD").format("DD-MM-YYYY") : todayDate;
+    
 
         if (isOldPatient && !selectedDate) {
             alert("Please select a date for old patient!");

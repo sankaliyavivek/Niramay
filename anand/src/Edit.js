@@ -138,6 +138,17 @@ function Edit() {
         setAddress(patient.address);
         setContact(patient.contact);
         setDate(patient.date);
+
+
+        if (patient.date) {
+          const dateObj = new Date(patient.date);
+          const formattedDate = dateObj.toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
+          setDate(formattedDate); // Set date in DD-MM-YYYY format
+        }
       })
       .catch((error) => {
         console.error("Error fetching patient:", error);
@@ -147,6 +158,8 @@ function Edit() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const [year, month, day] = date.split("-");
+    const formattedDate = `${day}-${month}-${year}`;
     try {
       await axios.put(
         `${API_URL}/patients/update/${id}`,

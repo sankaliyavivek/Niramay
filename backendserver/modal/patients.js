@@ -41,7 +41,7 @@ const PatientsSchema = new mongoose.Schema({
         match: [/^\d{10}$/, 'Invalid contact number'] // Ensures a 10-digit number
     },
     date: {
-        type: String,   // <-- Change this to String to store DD/MM/YYYY
+        type: Date, 
         required: true,
     }
 });
@@ -61,9 +61,9 @@ PatientsSchema.pre("save", async function (next) {
         }
     }
 
-    // ✅ Automatically format the date to DD/MM/YYYY
-    if (this.date) {
-        this.date = moment(this.date).format("DD/MM/YYYY");
+    // ✅ Convert DD/MM/YYYY to a valid Date object before saving
+    if (this.date && typeof this.date === "string") {
+        this.date = moment(this.date, "DD/MM/YYYY").toDate();
     }
 
     next();
