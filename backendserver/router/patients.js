@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Patients = require('../modal/patients');
 const {Authorization} = require('../middleware/authuser') 
+const moment = require('moment');
 
 // Add a new patient
 router.post('/patient',Authorization,async (req, res) => {
