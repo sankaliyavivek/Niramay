@@ -158,8 +158,7 @@ function Edit() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const [year, month, day] = date.split("-");
-    const formattedDate = `${day}-${month}-${year}`;
+  
     try {
       await axios.put(
         `${API_URL}/patients/update/${id}`,
