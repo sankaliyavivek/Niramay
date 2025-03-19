@@ -163,7 +163,7 @@ function Edit() {
     try {
       await axios.put(
         `${API_URL}/patients/update/${id}`,
-        { department, gender, name, age, address, contact, date },
+        { department, gender, name, age, address, contact, date:formattedDate },
         { withCredentials: true }
       );
 
