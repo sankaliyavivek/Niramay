@@ -8,11 +8,13 @@ router.post('/patient',Authorization,async (req, res) => {
     try {
         const { department, gender, name, address, age, contact, date } = req.body;
 
+        const formattedDate = moment(date, ["DD-MM-YYYY", "YYYY-MM-DD"]).format("DD-MM-YYYY");
+
         if (!department || !name || !gender || !age || !address || !contact || !date) {
             return res.status(400).json({ message: "All fields are required!" });
         }
 
-        const newPatient = new Patients({ department, gender, name, age, address, contact, date });
+        const newPatient = new Patients({ department, gender, name, age, address, contact, date: formattedDate, });
 
         await newPatient.save();
 
