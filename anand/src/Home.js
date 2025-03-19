@@ -5,21 +5,10 @@ import moment from 'moment';
 const API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 function Home() {
-    // Function to convert date to Indian Date Format
-    // const formatDate = (date) => {
-    //     const [year, month, day] = date.split('-');
-    //     return `${day}/${month}/${year}`;  // Convert to DD/MM/YYYY
-    // };
+   
 
     // Function to get today's date in Indian Date Format
-    const formatDateIndian = (date) => {
-        const d = new Date(date);
-        const day = String(d.getDate()).padStart(2, "0");
-        const month = String(d.getMonth() + 1).padStart(2, "0"); 
-        const year = d.getFullYear();
-        return `${day}-${month}-${year}`;
-    };
-
+    const formatDateIndian = (date) => moment(date).format("DD-MM-YYYY");
     const [department, setDepartment] = useState("");
     const [gender, setGender] = useState("");
     const [name, setName] = useState("");
@@ -41,7 +30,7 @@ function Home() {
 
         // Final date based on patient type
         const finalDate = isOldPatient ? formatDateIndian(selectedDate) : formatDateIndian(new Date());
-    
+
 
         if (isOldPatient && !selectedDate) {
             alert("Please select a date for old patient!");

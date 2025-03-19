@@ -60,6 +60,9 @@ PatientsSchema.pre("save", async function (next) {
             return next(err);
         }
     }
+    if (this.date) {
+        this.date = moment(this.date, ["DD-MM-YYYY", "YYYY-MM-DD"]).format("DD-MM-YYYY");
+    }
 
    
 
