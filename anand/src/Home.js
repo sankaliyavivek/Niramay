@@ -5,7 +5,7 @@ import moment from 'moment';
 const API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 function Home() {
-   
+
 
     // Function to get today's date in Indian Date Format
     const formatDateIndian = (date) => moment(date).format("DD-MM-YYYY");
@@ -28,13 +28,15 @@ function Home() {
             return;
         }
 
+
         // Final date based on patient type
-        const finalDate = isOldPatient ? formatDateIndian(selectedDate) : formatDateIndian(new Date());
-
-
-        if (isOldPatient && !selectedDate) {
-            alert("Please select a date for old patient!");
-            return;
+        let finalDate = new Date(); // Default to today's date
+        if (isOldPatient) {
+            if (!selectedDate) {
+                alert("Please select a date for old patient!");
+                return;
+            }
+            finalDate = new Date(selectedDate); // ✅ Now it's allowed
         }
 
         try {
@@ -47,12 +49,12 @@ function Home() {
                 contact,
                 date: finalDate,
             },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                withCredentials: true
-            });
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    },
+                    withCredentials: true
+                });
 
             alert(response.data.message);
 
@@ -118,16 +120,16 @@ function Home() {
                     <div className='form-group'>
                         <label>Date</label>
                         {isOldPatient ? (
-                            <input 
-                                type="date" 
-                                value={selectedDate} 
-                                onChange={(e) => setSelectedDate(e.target.value)} 
+                            <input
+                                type="date"
+                                value={selectedDate}
+                                onChange={(e) => setSelectedDate(e.target.value)}
                             />
                         ) : (
-                            <input 
-                                type="text" 
-                                value={formatDateIndian(new Date())} 
-                                readOnly 
+                            <input
+                                type="text"
+                                value={formatDateIndian(new Date())}
+                                readOnly
                             />
                         )}
                     </div>
@@ -142,15 +144,15 @@ function Home() {
                     {/* Toggle Buttons */}
                     <div className='form-btn toggle-btn'>
                         {!isOldPatient ? (
-                            <button 
-                                type="button" 
+                            <button
+                                type="button"
                                 onClick={() => setIsOldPatient(true)}
                             >
                                 Add Old Patient
                             </button>
                         ) : (
-                            <button 
-                                type="button" 
+                            <button
+                                type="button"
                                 onClick={() => setIsOldPatient(false)}
                             >
                                 Add Today's Patient
