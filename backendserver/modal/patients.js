@@ -38,7 +38,7 @@ const PatientsSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        match: [/^\d{10}$/, 'Invalid contact number'] // Ensures a 10-digit number
+       
     },
     date: {
         type: String,   // <-- Change this to String to store DD/MM/YYYY
