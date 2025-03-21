@@ -21,7 +21,7 @@ function Home() {
 
     const todayDate = getIndianDateFormat();
 
-    const [department, setDepartment] = useState("");
+    const [department, setDepartment] = useState("Homeopathic");
     const [gender, setGender] = useState("");
     const [name, setName] = useState("");
     const [address, setAddress] = useState("");
@@ -90,7 +90,7 @@ function Home() {
                 <form onSubmit={handleAdd}>
                     <div className='form-group'>
                         <label>Department</label>
-                        <select value={department} onChange={(e) => setDepartment(e.target.value)}>
+                        <select value={department} onChange={(e) => setDepartment(e.target.value)} disabled>
                             <option value="" hidden>Select Department</option>
                             <option value="Homiopathic">Homeopathic</option>
                         </select>
