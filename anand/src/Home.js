@@ -92,7 +92,7 @@ function Home() {
                         <label>Department</label>
                         <select value={department} onChange={(e) => setDepartment(e.target.value)}>
                             <option value="" hidden>Select Department</option>
-                            <option value="Homiopathic">Homiopathic</option>
+                            <option value="Homiopathic">Homeopathic</option>
                         </select>
                     </div>
 
