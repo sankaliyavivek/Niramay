@@ -12,6 +12,7 @@ app.use(cookieParser());
 app.use(cors({
     origin: ["http://localhost:3000", "https://niramayclinic.netlify.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
 }));
 
