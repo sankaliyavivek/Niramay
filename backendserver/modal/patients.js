@@ -1,53 +1,26 @@
 const mongoose = require("mongoose");
 const moment = require("moment");
 
-// Auto-increment helper schema
+// Auto-increment counter schema
 const counterSchema = new mongoose.Schema({
     _id: { type: String, required: true },
     seq: { type: Number, default: 1 }
 });
-
 const Counter = mongoose.model("Counter", counterSchema);
 
 const PatientsSchema = new mongoose.Schema({
     patientId: { type: Number, unique: true },
-    department: {
-        type: String,
-        required: true
-    },
-    name: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    gender: {
-        type: String,
-        enum: ['Male', 'Female', 'Other'], 
-        required: true
-    },
-    address: {
-        type: String,
-        required: true
-    },
-    age: {
-        type: Number,
-        required: true,
-        min: 0
-    },
-    contact: {
-        type: String,
-        required: true,
-        unique: true,
-       
-    },
-    date: {
-        type: String,   // <-- Change this to String to store DD/MM/YYYY
-        required: true,
-    }
+    department: { type: String, required: true },
+    name: { type: String, required: true, trim: true },
+    gender: { type: String, enum: ['Male', 'Female', 'Other'], required: true },
+    address: { type: String, required: true },
+    age: { type: Number, required: true, min: 0 },
+    contact: { type: String, required: true, unique: true },
+    date: { type: String, required: true } // Stored as DD/MM/YYYY
 });
 
-// ✅ Auto-increment patientId middleware
-PatientsSchema.pre("save", async function (next) {
+// ✅ Move auto-increment logic to `pre("validate")` 
+PatientsSchema.pre("validate", async function (next) {
     if (!this.patientId) {
         try {
             const counter = await Counter.findByIdAndUpdate(
@@ -55,17 +28,20 @@ PatientsSchema.pre("save", async function (next) {
                 { $inc: { seq: 1 } },
                 { new: true, upsert: true }
             );
+
             this.patientId = counter.seq;
         } catch (err) {
             return next(err);
         }
     }
+    next();
+});
 
-    // ✅ Automatically format the date to DD/MM/YYYY
+// ✅ Format date before saving
+PatientsSchema.pre("save", function (next) {
     if (this.date) {
-        this.date = moment(this.date).format("DD/MM/YYYY");
+        this.date = moment(this.date, "YYYY-MM-DD").format("DD/MM/YYYY");
     }
-
     next();
 });
 
