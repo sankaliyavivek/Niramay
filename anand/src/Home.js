@@ -35,7 +35,7 @@ function Home() {
 
         const token = localStorage.getItem('token');
 
-        if (!department || !name || !gender || !age || !address || !contact) {
+        if (!department || !name || !gender || !age || !address ) {
             alert("All fields are required!");
             return;
         }
