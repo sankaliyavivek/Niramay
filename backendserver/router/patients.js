@@ -8,7 +8,7 @@ router.post('/patient',Authorization,async (req, res) => {
     try {
         const { department, gender, name, address, age, contact, date } = req.body;
 
-        if (!department || !name || !gender || !age || !address || !contact || !date) {
+        if (!department || !name || !gender || !age || !address || !date) {
             return res.status(400).json({ message: "All fields are required!" });
         }
 
