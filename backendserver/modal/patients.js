@@ -15,7 +15,7 @@ const PatientsSchema = new mongoose.Schema({
     gender: { type: String, enum: ['Male', 'Female', 'Other'], required: true },
     address: { type: String, required: true },
     age: { type: Number, required: true, min: 0 },
-    contact: { type: String, default: null },
+    contact: { type: String, default: null ,  sparse: true },
     date: { type: String, required: true } // Stored as DD/MM/YYYY
 });
 
