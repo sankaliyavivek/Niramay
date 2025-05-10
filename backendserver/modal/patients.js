@@ -15,11 +15,11 @@ const PatientsSchema = new mongoose.Schema({
     gender: { type: String, enum: ['Male', 'Female', 'Other'], required: true },
     address: { type: String, required: true },
     age: { type: Number, required: true, min: 0 },
-    contact: { type: String, default: null ,  sparse: true },
+    contact: { type: String, default: null, sparse: true }, // ✅ allow null & duplicates if missing
     date: { type: String, required: true } // Stored as DD/MM/YYYY
 });
 
-// ✅ Move auto-increment logic to `pre("validate")` 
+// Auto-increment patientId
 PatientsSchema.pre("validate", async function (next) {
     if (!this.patientId) {
         try {
@@ -40,7 +40,7 @@ PatientsSchema.post("save", async function () {
     );
 });
 
-// ✅ Format date before saving
+// Format date before saving
 PatientsSchema.pre("save", function (next) {
     if (this.date) {
         this.date = moment(this.date, "YYYY-MM-DD").format("DD/MM/YYYY");
