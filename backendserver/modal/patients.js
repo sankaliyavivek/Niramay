@@ -17,8 +17,6 @@ const PatientsSchema = new mongoose.Schema({
     age: { type: Number, required: true, min: 0 },
      contact: {
     type: String,
-    unique: true,
-    sparse: true,
     default: null
   },
  // ✅ allow null & duplicates if missing
