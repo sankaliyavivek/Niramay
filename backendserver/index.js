@@ -31,10 +31,10 @@ app.use((req, res, next) => {
 
 
 const User = require('./router/user');
-const Patients = require('./router/patients');
+// const Patients = require('./router/patients');
 
 app.use('/user', User);
-app.use('/patients', Patients);
+// app.use('/patients', Patients);
 
 const Patients = require('./modal/patients');
 
