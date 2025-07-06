@@ -36,23 +36,6 @@ const Patients = require('./router/patients');
 app.use('/user', User);
 app.use('/patients', Patients);
 
-const Patient = require('./modal/patients');
-
-(async () => {
-  try {
-    // Drop existing broken contact_1 index
-    await Patient.collection.dropIndex('contact_1');
-    console.log('✅ Dropped old contact_1 index');
-
-    // Recreate the correct sparse unique index
-    await Patient.collection.createIndex({ contact: 1 }, { unique: true, sparse: true });
-    console.log('✅ Recreated contact_1 index with sparse:true');
-  } catch (err) {
-    console.error('❌ Error fixing contact_1 index:', err.message);
-  }
-})();
-
-
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

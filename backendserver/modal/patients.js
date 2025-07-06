@@ -16,14 +16,12 @@ const PatientsSchema = new mongoose.Schema({
     address: { type: String, required: true },
     age: { type: Number, required: true, min: 0 },
      contact: {
-    type: String,
-    default: null
+    type: String
   },
  // ✅ allow null & duplicates if missing
     date: { type: String, required: true } // Stored as DD/MM/YYYY
 });
 
-PatientsSchema.index({ contact: 1 }, { unique: true, sparse: true });
 
 // Auto-increment patientId
 PatientsSchema.pre("validate", async function (next) {

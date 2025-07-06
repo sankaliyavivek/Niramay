@@ -8,24 +8,25 @@ router.post('/patient', Authorization, async (req, res) => {
     try {
         let { department, gender, name, address, age, contact, date } = req.body;
 
+        // Validate required fields
         if (!department || !name || !gender || !age || !address || !date) {
             return res.status(400).json({ message: "All fields are required!" });
         }
 
-        const patientData = {
+        if (!contact || contact.trim() === "") {
+  delete req.body.contact; // ✅ REMOVE the field entirely
+}
+
+        const newPatient = new Patients({
             department,
             gender,
             name,
             age,
             address,
-            date,
-        };
+            contact,
+            date
+        });
 
-        if (contact && contact.trim() !== "") {
-            patientData.contact = contact.trim();
-        }
-
-        const newPatient = new Patients(patientData);
         await newPatient.save();
 
         res.status(201).json({ message: "Patient added successfully!", patient: newPatient });
@@ -34,7 +35,6 @@ router.post('/patient', Authorization, async (req, res) => {
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
 });
-
 
 // Get all patients
 router.get('/getall', async (req, res) => {
