@@ -13,8 +13,9 @@ router.post('/patient', Authorization, async (req, res) => {
             return res.status(400).json({ message: "All fields are required!" });
         }
 
-        // Convert empty contact string to null
-        contact = contact?.trim() === "" ? null : contact;
+        if (!contact || contact.trim() === "") {
+            delete req.body.contact; // ✅ REMOVE the field entirely
+        }
 
         const newPatient = new Patients({
             department,
