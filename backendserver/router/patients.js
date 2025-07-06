@@ -17,16 +17,7 @@ router.post('/patient', Authorization, async (req, res) => {
             delete req.body.contact; // ✅ REMOVE the field entirely
         }
 
-        const newPatient = new Patients({
-            department,
-            gender,
-            name,
-            age,
-            address,
-            contact,
-            date
-        });
-
+        const newPatient = new Patients(req.body);
         await newPatient.save();
 
         res.status(201).json({ message: "Patient added successfully!", patient: newPatient });
