@@ -11,7 +11,7 @@ const PatientDetail = () => {
     useEffect(() => {
         const fetchPatient = async () => {
             try {
-                const response = await fetch(`${API_URL}/patient/view/${eid}`);
+                const response = await fetch(`${API_URL}/patients/view/${eid}`);
                 if (!response.ok) {
                     throw new Error("Patient not found");
                 }

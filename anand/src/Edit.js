@@ -17,7 +17,7 @@ function Edit() {
   const [date, setDate] = useState("");
 
   useEffect(() => {
-    axios.get(`${API_URL}/patient/getprint/${id}`,{withCredentials:true})
+    axios.get(`${API_URL}/patients/getprint/${id}`,{withCredentials:true})
       .then(response => {
         console.log("Fetched Patient:", response.data);
         const patient = response.data;
@@ -38,7 +38,7 @@ function Edit() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`${API_URL}/patient/update/${id}`, {
+      await axios.put(`${API_URL}/patients/update/${id}`, {
         department, gender, name, age, address, contact, date
       },{withCredentials:true});
 
