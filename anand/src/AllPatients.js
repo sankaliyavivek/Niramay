@@ -13,7 +13,7 @@ function AllPatients() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`${API_URL}/patients/getall`, { withCredentials: true })
+    axios.get(`${API_URL}/patient/getall`, { withCredentials: true })
       .then(response => {
         setPatients(response.data);
         setFilteredPatients(response.data);
@@ -49,7 +49,7 @@ function AllPatients() {
     if (!window.confirm("Are you sure you want to delete this patient?")) return;
 
     try {
-      await axios.delete(`${API_URL}/patients/delete/${id}`, { withCredentials: true });
+      await axios.delete(`${API_URL}/patient/delete/${id}`, { withCredentials: true });
       alert("Patient deleted successfully!");
       setPatients(patients.filter(patient => patient.patientId !== id));
       setFilteredPatients(filteredPatients.filter(patient => patient.patientId !== id));

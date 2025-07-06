@@ -51,7 +51,7 @@ function Home() {
         const cleanedContact = contact.trim() === "" ? undefined : contact;
 
         try {
-            const response = await axios.post(`${API_URL}/patients/patient`, {
+            const response = await axios.post(`${API_URL}/patient/patient`, {
                 department,
                 name,
                 gender,

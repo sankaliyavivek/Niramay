@@ -16,7 +16,7 @@ function Month() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/patients/getall`, { withCredentials: true });
+        const response = await axios.get(`${API_URL}/patient/getall`, { withCredentials: true });
         setMonthData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
