@@ -15,9 +15,17 @@ const PatientsSchema = new mongoose.Schema({
     gender: { type: String, enum: ['Male', 'Female', 'Other'], required: true },
     address: { type: String, required: true },
     age: { type: Number, required: true, min: 0 },
-    contact: { type: String, default: null, sparse: true }, // ✅ allow null & duplicates if missing
+     contact: {
+    type: String,
+    unique: true,
+    sparse: true,
+    default: null
+  },
+ // ✅ allow null & duplicates if missing
     date: { type: String, required: true } // Stored as DD/MM/YYYY
 });
+
+PatientsSchema.index({ contact: 1 }, { unique: true, sparse: true });
 
 // Auto-increment patientId
 PatientsSchema.pre("validate", async function (next) {
