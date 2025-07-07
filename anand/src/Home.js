@@ -56,7 +56,7 @@ function Home() {
                 name,
                 gender,
                 age,
-                address,
+             address: address.includes('Dhandhuka') ? address : `${address}, Dhandhuka`,
                 contact : cleanedContact,
                 date: finalDate,
             },
