@@ -58,7 +58,7 @@ function Edit() {
           <label>Dept:</label>
           <select value={department} onChange={(e) => setDepartment(e.target.value)} className='p-1 my-2' required>
             <option value="" hidden>Select Department</option>
-            <option value="Homiopathic">Homiopathic</option>
+            <option value="Homiopathic" selected>Homeopathic</option>
           </select>
         </div>
 
