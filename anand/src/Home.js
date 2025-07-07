@@ -82,6 +82,8 @@ function Home() {
             console.error("Error adding patient:", error.response?.data || error.message);
             alert("Failed to add patient.");
         }
+
+        window.location.reload();
     };
 
     return (
