@@ -2,15 +2,22 @@ const express = require('express');
 const router = express.Router();
 const Patients = require('../modal/patients');
 const { Authorization } = require('../middleware/authuser');
+const moment = require('moment');
 
 // Add a new patient
 router.post('/patient', Authorization, async (req, res) => {
     try {
         let { department, gender, name, address, age, contact, date } = req.body;
 
+
         // Validate required fields
         if (!department || !name || !gender || !age || !address || !date) {
             return res.status(400).json({ message: "All fields are required!" });
+        }
+
+        const finalDate = new Date(date);
+        if (isNaN(finalDate.getTime())) {
+            return res.status(400).json({ message: "Invalid date format!" });
         }
 
         if (!contact || contact.trim() === "") {
@@ -24,7 +31,7 @@ router.post('/patient', Authorization, async (req, res) => {
             age,
             address,
             contact,
-            date
+            date: finalDate
         });
 
 

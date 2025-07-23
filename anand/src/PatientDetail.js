@@ -1,48 +1,53 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
-// ✅ 1. Add this function at the top
-const formatIndianDate = (dateString) => {
-    if (!dateString) return 'N/A';
+function PatientDetails() {
+  const { id } = useParams();
+  const [patient, setPatient] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-    const isoDate = dateString.includes('/')
-        ? dateString.split('/').reverse().join('-') // "23/07/2025" -> "2025-07-23"
-        : dateString;
+  const API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
-    const date = new Date(isoDate);
-    if (isNaN(date)) return 'Invalid Date';
+  useEffect(() => {
+    const fetchPatient = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/patients/view/${id}`);
+        setPatient(res.data);
+      } catch (err) {
+        console.error('Error fetching patient:', err);
+        setError('Unable to fetch patient details.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return date.toLocaleDateString('en-IN', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-    });
-};
+    fetchPatient();
+  }, [id, API_URL]);
 
-const PatientDetail = () => {
-    const { id } = useParams();
-    const [patient, setPatient] = useState({});
+  if (loading) return <p>Loading patient details...</p>;
+  if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
-    useEffect(() => {
-        axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/get/${id}`)
-            .then((res) => setPatient(res.data))
-            .catch((err) => console.error(err));
-    }, [id]);
-
-    return (
-        <div>
-            <h2>Patient Details</h2>
-            <p><strong>Patient ID:</strong> {patient._id}</p>
-            <p><strong>Name:</strong> {patient.name}</p>
-            <p><strong>Age:</strong> {patient.age}</p>
-            <p><strong>Gender:</strong> {patient.gender}</p>
-            <p><strong>Department:</strong> {patient.department}</p>
-            <p><strong>Address:</strong> {patient.address}</p>
-            <p><strong>Contact:</strong> {patient.contact}</p>
-            <p><strong>Date:</strong> {formatIndianDate(patient.date)}</p>
+  return (
+    <div className="container">
+      <h2>Patient Details</h2>
+      {patient ? (
+        <div className="patient-info">
+          <p><strong>Patient ID:</strong> {patient.patientId}</p>
+          <p><strong>Name:</strong> {patient.name}</p>
+          <p><strong>Age:</strong> {patient.age}</p>
+          <p><strong>Gender:</strong> {patient.gender}</p>
+          <p><strong>Department:</strong> {patient.department}</p>
+          <p><strong>Address:</strong> {patient.address}</p>
+          <p><strong>Contact:</strong> {patient.contact}</p>
+          <p><strong>Date:</strong> {patient.date}</p> {/* ✅ Direct display */}
         </div>
-    );
-};
+      ) : (
+        <p>No patient data found.</p>
+      )}
+    </div>
+  );
+}
 
-export default PatientDetail;
+export default PatientDetails;

@@ -19,7 +19,7 @@ const PatientsSchema = new mongoose.Schema({
     type: String
   },
  // ✅ allow null & duplicates if missing
-    date: { type: String, required: true } // Stored as DD/MM/YYYY
+    date: { type: Date, required: true }
 });
 
 
@@ -44,12 +44,7 @@ PatientsSchema.post("save", async function () {
     );
 });
 
-// Format date before saving
-PatientsSchema.pre("save", function (next) {
-    if (this.date) {
-        this.date = moment(this.date, "YYYY-MM-DD").format("DD/MM/YYYY");
-    }
-    next();
-});
+
+
 
 module.exports = mongoose.model("Patients", PatientsSchema);

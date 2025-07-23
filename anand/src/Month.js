@@ -25,16 +25,17 @@ function Month() {
     fetchData();
   }, []);
 
-  // ✅ Function to convert MongoDB Date to Indian Date Format (dd/mm/yyyy)
+  // ✅ Format date for display
   const formatIndianDate = (dateString) => {
-    const date = new Date(dateString);  // Convert to Date object
+    const date = new Date(dateString);
+    if (isNaN(date)) return 'Invalid';
     const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // +1 because month starts from 0
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    const mon = String(date.getMonth() + 1).padStart(2, '0');
+    const yr = date.getFullYear();
+    return `${day}/${mon}/${yr}`;
   };
 
-  // ✅ Function to filter data based on Month & Year
+  // ✅ Filter logic
   const handleMonth = useCallback(() => {
     if (!year || !month) {
       alert("Please enter both year and month!");
@@ -44,11 +45,16 @@ function Month() {
     const filtered = monthData.filter((item) => {
       if (!item.date) return false;
 
-      // Parse the date in dd/mm/yyyy format
-      const [day, mon, yr] = item.date.split('/');
+      const dateObj = new Date(item.date);
+      if (isNaN(dateObj)) return false;
 
-      // Match with selected year and month
-      return yr === year && mon === String(month).padStart(2, '0');
+      const itemYear = dateObj.getFullYear();
+      const itemMonth = dateObj.getMonth() + 1; // 0-based
+
+      return (
+        itemYear === parseInt(year) &&
+        itemMonth === parseInt(month)
+      );
     });
 
     setFilteredData(filtered);
@@ -57,7 +63,6 @@ function Month() {
       alert("No data found for this month.");
     }
   }, [year, month, monthData]);
-
 
   // ✅ Clear Filter
   const handleClear = () => {
@@ -81,7 +86,7 @@ function Month() {
       item.patientId,
       item.department,
       item.name,
-      formatIndianDate(item.date)
+      formatIndianDate(item.date),
     ]);
 
     doc.autoTable({
@@ -99,7 +104,6 @@ function Month() {
         <h2>Monthly Statistics</h2>
       </div>
 
-      {/* ✅ Input Fields */}
       <div className='row mb-4'>
         <div className='col-md-4'>
           <input
@@ -108,9 +112,6 @@ function Month() {
             placeholder="Year (YYYY)"
             value={year}
             onChange={(e) => setYear(e.target.value)}
-            min="1900"
-            max="2100"
-            required
           />
         </div>
         <div className='col-md-4'>
@@ -120,9 +121,6 @@ function Month() {
             placeholder="Month (1-12)"
             value={month}
             onChange={(e) => setMonth(e.target.value)}
-            min="1"
-            max="12"
-            required
           />
         </div>
         <div className='col-md-4 d-flex gap-2'>
@@ -135,7 +133,6 @@ function Month() {
         </div>
       </div>
 
-      {/* ✅ Data Table */}
       <div className='table-responsive'>
         <table className='table table-striped table-bordered text-center'>
           <thead className='table-dark'>
@@ -167,7 +164,6 @@ function Month() {
         </table>
       </div>
 
-      {/* ✅ Download PDF Button */}
       {filteredData.length > 0 && (
         <div className='text-end mt-3'>
           <button

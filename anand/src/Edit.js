@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
-const API_URL = process.env.REACT_APP_BACKEND_API_URL
+const API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 function Edit() {
-  const { id } = useParams(); // Get patient ID from URL
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [department, setDepartment] = useState("");
@@ -25,24 +25,14 @@ function Edit() {
         setName(patient.name);
         setAge(patient.age);
         setAddress(patient.address);
-        setContact(patient.contact);
-
-        // Convert DD/MM/YYYY → YYYY-MM-DD for date input
-        const [day, month, year] = patient.date.split('/');
-        setDate(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
+        setContact(patient.contact || '');
+        setDate(patient.date); // already a plain string
       })
-      .catch(error => {
-        alert("Error fetching patient!");
-      });
+      .catch(() => alert("Error fetching patient!"));
   }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Convert date back to DD/MM/YYYY
-    const [year, month, day] = date.split('-');
-    const formattedDate = `${day}/${month}/${year}`;
-
     try {
       await axios.put(`${API_URL}/patients/update/${id}`, {
         department,
@@ -51,7 +41,7 @@ function Edit() {
         age,
         address,
         contact,
-        date: formattedDate
+        date, // already in correct string format
       }, { withCredentials: true });
 
       alert("Patient updated successfully!");
@@ -61,24 +51,21 @@ function Edit() {
     }
   };
 
-
   return (
     <div className='Homer'>
       <div className='text-center'><h2>Edit Patient</h2></div>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Dept:</label>
-          <select value={department} onChange={(e) => setDepartment(e.target.value)} className='p-1 my-2' required>
+          <select value={department} onChange={(e) => setDepartment(e.target.value)} required>
             <option value="" hidden>Select Department</option>
             <option value="Homeopathic">Homeopathic</option>
           </select>
         </div>
-
         <div>
-          <span className='my-3 pe-2'>Full Name:</span>
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder='Full Name' required />
+          <span>Full Name:</span>
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
         </div>
-
         <div>
           <label>Gender:</label>
           <select value={gender} onChange={(e) => setGender(e.target.value)} required>
@@ -87,30 +74,23 @@ function Edit() {
             <option value="Female">Female</option>
           </select>
         </div>
-
         <div>
           <label>Address:</label>
-          <textarea value={address} rows={2} cols={24} placeholder='Address' className='my-2' onChange={(e) => setAddress(e.target.value)} required></textarea>
+          <textarea value={address} onChange={(e) => setAddress(e.target.value)} rows={2} required />
         </div>
-
         <div>
-          <span className='my-2'>Age:</span>
-          <input type="number" value={age} onChange={(e) => setAge(e.target.value)} placeholder='Age' required />
+          <span>Age:</span>
+          <input type="number" value={age} onChange={(e) => setAge(e.target.value)} required />
         </div>
-
         <div>
-          <span className='my-2'>Contact No:</span>
-          <input type="number" value={contact} onChange={(e) => setContact(e.target.value)} placeholder='Contact No' required />
+          <span>Contact No:</span>
+          <input type="number" value={contact} onChange={(e) => setContact(e.target.value)} />
         </div>
-
         <div>
           <label>Date:</label>
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
         </div>
-
-        <button type="submit" className="btn btn-success">
-          Update Patient
-        </button>
+        <button type="submit" className="btn btn-success">Update Patient</button>
       </form>
     </div>
   );

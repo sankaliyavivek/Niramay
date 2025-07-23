@@ -12,16 +12,7 @@ function Home() {
     const [contact, setContact] = useState("");
     const [isOldPatient, setIsOldPatient] = useState(false);
     const [selectedDate, setSelectedDate] = useState("");
-
-    // ✅ Today date state
     const [todayDate, setTodayDate] = useState("");
-    const [formattedToday, setFormattedToday] = useState("");
-
-    const formatToIndianDate = (date) => {
-        if (!date) return "";
-        const [year, month, day] = date.split('-');
-        return `${day}/${month}/${year}`;
-    };
 
     const getTodayDate = () => {
         const today = new Date();
@@ -31,11 +22,9 @@ function Home() {
         return `${year}-${month}-${day}`;
     };
 
-    // ✅ Set today's date on component mount
     useEffect(() => {
         const date = getTodayDate();
         setTodayDate(date);
-        setFormattedToday(formatToIndianDate(date));
     }, []);
 
     const handleAdd = async (e) => {
@@ -47,14 +36,11 @@ function Home() {
             return;
         }
 
-        let finalDate = formattedToday;
+        const finalDate = isOldPatient ? selectedDate : todayDate;
 
-        if (isOldPatient) {
-            if (!selectedDate) {
-                alert("Please select a date for old patient!");
-                return;
-            }
-            finalDate = formatToIndianDate(selectedDate);
+        if (isOldPatient && !selectedDate) {
+            alert("Please select a date for old patient!");
+            return;
         }
 
         const cleanedContact = contact.trim() === "" ? undefined : contact;
@@ -67,7 +53,7 @@ function Home() {
                 age,
                 address: address.includes('Dhandhuka') ? address : `${address}, Dhandhuka`,
                 contact: cleanedContact,
-                date: finalDate,
+                date: finalDate, // ISO format
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -75,7 +61,7 @@ function Home() {
                 withCredentials: true
             });
 
-            console.log("Date being sent:", finalDate);
+            console.log("📅 Date sent to backend:", finalDate);
             alert(response.data.message);
 
             // Reset form
@@ -91,6 +77,8 @@ function Home() {
             alert("Failed to add patient.");
         }
     };
+
+   
 
     return (
         <div className='patient-container mt-3'>
@@ -145,7 +133,7 @@ function Home() {
                         ) : (
                             <input
                                 type="text"
-                                value={formattedToday}
+                                value={todayDate}
                                 readOnly
                             />
                         )}
