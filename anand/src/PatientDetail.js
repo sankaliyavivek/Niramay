@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
 function PatientDetails() {
-    const { id } = useParams(); // Route should be: /view/:id
+    const { id } = useParams(); // Route param: /view/:id
     const [patient, setPatient] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -29,11 +29,15 @@ function PatientDetails() {
     const formatIndianDate = (dateString) => {
         if (!dateString) return 'N/A';
         const date = new Date(dateString);
-        return date.toLocaleDateString('en-IN'); // DD/MM/YYYY
+        return date.toLocaleDateString('en-IN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
     };
 
     if (loading) return <p>Loading patient details...</p>;
-    if (error) return <p>{error}</p>;
+    if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
     return (
         <div className="container">
