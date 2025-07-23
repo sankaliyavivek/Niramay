@@ -21,11 +21,11 @@ const formatIndianDate = (dateString) => {
 };
 
 const PatientDetail = () => {
-    const { eid } = useParams();
+    const { id } = useParams();
     const [patient, setPatient] = useState({});
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/get/${eid}`)
+        axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/get/${id}`)
             .then((res) => setPatient(res.data))
             .catch((err) => console.error(err));
     }, [eid]);
