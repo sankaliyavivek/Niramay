@@ -127,7 +127,7 @@ function App() {
             <Route path="/print/:id" element={<Print />} />
             <Route path="/month" element={<Month />} />
             <Route path="/edit/:id" element={<Edit />} />
-            <Route path="/view/:eid" element={<PatientDetail />} />
+            <Route path="/view/:id" element={<PatientDetail />} />
             <Route path="/register" element={<Register></Register>}></Route>
           </Routes>
         </main>

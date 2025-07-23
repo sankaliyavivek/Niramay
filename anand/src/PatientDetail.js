@@ -12,6 +12,7 @@ function PatientDetails() {
 
     useEffect(() => {
         const fetchPatient = async () => {
+            
             try {
                 const res = await axios.get(`${API_URL}/patients/view/${id}`);
                 setPatient(res.data);
