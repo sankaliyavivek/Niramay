@@ -28,7 +28,7 @@ const PatientDetail = () => {
         axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/get/${id}`)
             .then((res) => setPatient(res.data))
             .catch((err) => console.error(err));
-    }, [eid]);
+    }, [id]);
 
     return (
         <div>
