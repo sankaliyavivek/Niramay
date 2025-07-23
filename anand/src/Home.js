@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
@@ -32,14 +34,14 @@ function Home() {
         const token = localStorage.getItem('token');
 
         if (!department || !name || !gender || !age || !address) {
-            alert("All fields are required!");
+            toast.warn("All fields are required!");
             return;
         }
 
         const finalDate = isOldPatient ? selectedDate : todayDate;
 
         if (isOldPatient && !selectedDate) {
-            alert("Please select a date for old patient!");
+             toast.warn("Please select a date for old patient!");
             return;
         }
 
@@ -62,7 +64,7 @@ function Home() {
             });
 
             console.log("📅 Date sent to backend:", finalDate);
-            alert(response.data.message);
+            toast.success(response.data.message);
 
             // Reset form
             setName('');
@@ -74,7 +76,7 @@ function Home() {
             setSelectedDate('');
         } catch (error) {
             console.error("Error adding patient:", error.response?.data || error.message);
-            alert("Failed to add patient.");
+           toast.error("Failed to add patient.");
         }
     };
 
@@ -155,7 +157,9 @@ function Home() {
                     </div>
                 </form>
             </div>
+            <ToastContainer position="top-right" autoClose={2000} />
         </div>
+
     );
 }
 
