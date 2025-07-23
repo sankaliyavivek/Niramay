@@ -14,10 +14,10 @@ router.post('/patient', Authorization, async (req, res) => {
         }
 
         if (!contact || contact.trim() === "") {
-  delete req.body.contact; // ✅ REMOVE the field entirely
-}
+            delete req.body.contact; // ✅ REMOVE the field entirely
+        }
 
-        const newPatient = new Patients({
+        const newPatient = await Patients.create({
             department,
             gender,
             name,
@@ -26,6 +26,7 @@ router.post('/patient', Authorization, async (req, res) => {
             contact,
             date
         });
+
 
         await newPatient.save();
 
@@ -39,13 +40,14 @@ router.post('/patient', Authorization, async (req, res) => {
 // Get all patients
 router.get('/getall', async (req, res) => {
     try {
-        const allPatients = await Patients.find();
+        const allPatients = await Patients.find({ patientId: { $exists: true } });
         res.json(allPatients);
     } catch (error) {
         console.error("Error fetching patients:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
+
 
 // Get a single patient by patientId
 router.get('/getprint/:id', async (req, res) => {

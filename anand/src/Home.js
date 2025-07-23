@@ -1,26 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 function Home() {
-    // Function to convert date to Indian Date Format
-    const formatDate = (date) => {
-        const [year, month, day] = date.split('-');
-        return `${day}/${month}/${year}`;  // Convert to DD/MM/YYYY
-    };
-
-    // Function to get today's date in Indian Date Format
-    const getIndianDateFormat = () => {
-        const today = new Date();
-        const day = String(today.getDate()).padStart(2, '0');
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const year = today.getFullYear();
-        return `${day}/${month}/${year}`;
-    };
-
-    const todayDate = getIndianDateFormat();
-
     const [department, setDepartment] = useState("Homeopathic");
     const [gender, setGender] = useState("");
     const [name, setName] = useState("");
@@ -30,22 +13,48 @@ function Home() {
     const [isOldPatient, setIsOldPatient] = useState(false);
     const [selectedDate, setSelectedDate] = useState("");
 
+    // ✅ Today date state
+    const [todayDate, setTodayDate] = useState("");
+    const [formattedToday, setFormattedToday] = useState("");
+
+    const formatToIndianDate = (date) => {
+        if (!date) return "";
+        const [year, month, day] = date.split('-');
+        return `${day}/${month}/${year}`;
+    };
+
+    const getTodayDate = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    // ✅ Set today's date on component mount
+    useEffect(() => {
+        const date = getTodayDate();
+        setTodayDate(date);
+        setFormattedToday(formatToIndianDate(date));
+    }, []);
+
     const handleAdd = async (e) => {
         e.preventDefault();
-
         const token = localStorage.getItem('token');
 
-        if (!department || !name || !gender || !age || !address ) {
+        if (!department || !name || !gender || !age || !address) {
             alert("All fields are required!");
             return;
         }
 
-        // Final date based on patient type
-        const finalDate = isOldPatient ? formatDate(selectedDate) : todayDate;
+        let finalDate = formattedToday;
 
-        if (isOldPatient && !selectedDate) {
-            alert("Please select a date for old patient!");
-            return;
+        if (isOldPatient) {
+            if (!selectedDate) {
+                alert("Please select a date for old patient!");
+                return;
+            }
+            finalDate = formatToIndianDate(selectedDate);
         }
 
         const cleanedContact = contact.trim() === "" ? undefined : contact;
@@ -56,21 +65,20 @@ function Home() {
                 name,
                 gender,
                 age,
-             address: address.includes('Dhandhuka') ? address : `${address}, Dhandhuka`,
-                contact : cleanedContact,
+                address: address.includes('Dhandhuka') ? address : `${address}, Dhandhuka`,
+                contact: cleanedContact,
                 date: finalDate,
-            },
-            {
+            }, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
                 withCredentials: true
             });
 
+            console.log("Date being sent:", finalDate);
             alert(response.data.message);
 
             // Reset form
-            setDepartment('');
             setName('');
             setGender('');
             setAge('');
@@ -82,8 +90,6 @@ function Home() {
             console.error("Error adding patient:", error.response?.data || error.message);
             alert("Failed to add patient.");
         }
-
-        window.location.reload();
     };
 
     return (
@@ -95,8 +101,7 @@ function Home() {
                     <div className='form-group'>
                         <label>Department</label>
                         <select value={department} onChange={(e) => setDepartment(e.target.value)} disabled>
-                            <option value="" hidden>Select Department</option>
-                            <option value="Homiopathic">Homeopathic</option>
+                            <option value="Homeopathic">Homeopathic</option>
                         </select>
                     </div>
 
@@ -129,48 +134,36 @@ function Home() {
                         <input type="number" value={contact} onChange={(e) => setContact(e.target.value)} placeholder='Contact No' />
                     </div>
 
-                    {/* Date Input Section */}
                     <div className='form-group'>
                         <label>Date</label>
                         {isOldPatient ? (
-                            <input 
-                                type="date" 
-                                value={selectedDate} 
-                                onChange={(e) => setSelectedDate(e.target.value)} 
+                            <input
+                                type="date"
+                                value={selectedDate}
+                                onChange={(e) => setSelectedDate(e.target.value)}
                             />
                         ) : (
-                            <input 
-                                type="text" 
-                                value={todayDate} 
-                                readOnly 
+                            <input
+                                type="text"
+                                value={formattedToday}
+                                readOnly
                             />
                         )}
                     </div>
 
-                    {/* Submit Button */}
                     <div className='form-btn'>
                         <button type="submit">
                             {isOldPatient ? "Add Old Patient" : "Add Today's Patient"}
                         </button>
                     </div>
 
-                    {/* Toggle Buttons */}
                     <div className='form-btn toggle-btn'>
-                        {!isOldPatient ? (
-                            <button 
-                                type="button" 
-                                onClick={() => setIsOldPatient(true)}
-                            >
-                                Add Old Patient
-                            </button>
-                        ) : (
-                            <button 
-                                type="button" 
-                                onClick={() => setIsOldPatient(false)}
-                            >
-                                Add Today's Patient
-                            </button>
-                        )}
+                        <button
+                            type="button"
+                            onClick={() => setIsOldPatient(!isOldPatient)}
+                        >
+                            {isOldPatient ? "Add Today's Patient" : "Add Old Patient"}
+                        </button>
                     </div>
                 </form>
             </div>

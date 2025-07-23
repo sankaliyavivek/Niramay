@@ -17,9 +17,8 @@ function Edit() {
   const [date, setDate] = useState("");
 
   useEffect(() => {
-    axios.get(`${API_URL}/patients/getprint/${id}`,{withCredentials:true})
+    axios.get(`${API_URL}/patients/getprint/${id}`, { withCredentials: true })
       .then(response => {
-        console.log("Fetched Patient:", response.data);
         const patient = response.data;
         setDepartment(patient.department);
         setGender(patient.gender);
@@ -27,28 +26,41 @@ function Edit() {
         setAge(patient.age);
         setAddress(patient.address);
         setContact(patient.contact);
-        setDate(patient.date);
+
+        // Convert DD/MM/YYYY → YYYY-MM-DD for date input
+        const [day, month, year] = patient.date.split('/');
+        setDate(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
       })
       .catch(error => {
-        console.error("Error fetching patient:", error);
-        alert("Error fetching patient! Make sure the backend is running.");
+        alert("Error fetching patient!");
       });
   }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Convert date back to DD/MM/YYYY
+    const [year, month, day] = date.split('-');
+    const formattedDate = `${day}/${month}/${year}`;
+
     try {
       await axios.put(`${API_URL}/patients/update/${id}`, {
-        department, gender, name, age, address, contact, date
-      },{withCredentials:true});
+        department,
+        gender,
+        name,
+        age,
+        address,
+        contact,
+        date: formattedDate
+      }, { withCredentials: true });
 
       alert("Patient updated successfully!");
-      navigate("/all"); // Redirect after update
+      navigate("/all");
     } catch (error) {
-      console.error("Error updating patient:", error);
       alert("Error updating patient!");
     }
   };
+
 
   return (
     <div className='Homer'>
@@ -58,7 +70,7 @@ function Edit() {
           <label>Dept:</label>
           <select value={department} onChange={(e) => setDepartment(e.target.value)} className='p-1 my-2' required>
             <option value="" hidden>Select Department</option>
-            <option value="Homiopathic" selected>Homeopathic</option>
+            <option value="Homeopathic">Homeopathic</option>
           </select>
         </div>
 

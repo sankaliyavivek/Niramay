@@ -15,11 +15,17 @@ function AllPatients() {
   useEffect(() => {
     axios.get(`${API_URL}/patients/getall`, { withCredentials: true })
       .then(response => {
+        console.log("All patients:", response.data);
+        const missing = response.data.filter(p => !p.patientId);
+        if (missing.length > 0) {
+          console.warn("⚠️ Patients with missing patientId:", missing);
+        }
         setPatients(response.data);
         setFilteredPatients(response.data);
       })
       .catch(error => console.error("Error fetching patient data:", error));
   }, []);
+
 
   const handleSearch = (value) => {
     if (!value) {
@@ -68,6 +74,8 @@ function AllPatients() {
       patient.name,
       patient.contact
     ]);
+
+
     doc.autoTable({ startY: 20, head: headers, body: data });
     doc.save("patients.pdf");
   };
@@ -112,9 +120,9 @@ function AllPatients() {
           </thead>
           <tbody>
             {filteredPatients.length > 0 ? (
-              filteredPatients.map((patient,index) => (
+              filteredPatients.map((patient, index) => (
                 <tr key={patient.patientId}>
-                  <td>{index+1}</td>
+                  <td>{index + 1}</td>
                   <td>{patient.patientId}</td>
                   <td>{patient.department}</td>
                   <td>{patient.name}</td>

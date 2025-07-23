@@ -42,11 +42,13 @@ function Month() {
     }
 
     const filtered = monthData.filter((item) => {
-      const itemDate = new Date(item.date); // Convert MongoDB date to Date object
-      const itemMonth = String(itemDate.getMonth() + 1).padStart(2, '0');
-      const itemYear = String(itemDate.getFullYear());
+      if (!item.date) return false;
 
-      return itemYear === year && itemMonth === String(month).padStart(2, '0');
+      // Parse the date in dd/mm/yyyy format
+      const [day, mon, yr] = item.date.split('/');
+
+      // Match with selected year and month
+      return yr === year && mon === String(month).padStart(2, '0');
     });
 
     setFilteredData(filtered);
@@ -55,6 +57,7 @@ function Month() {
       alert("No data found for this month.");
     }
   }, [year, month, monthData]);
+
 
   // ✅ Clear Filter
   const handleClear = () => {
@@ -167,9 +170,9 @@ function Month() {
       {/* ✅ Download PDF Button */}
       {filteredData.length > 0 && (
         <div className='text-end mt-3'>
-          <button 
-            className='btn' 
-            style={{ backgroundColor: '#FF9933', color: '#fff' }} 
+          <button
+            className='btn'
+            style={{ backgroundColor: '#FF9933', color: '#fff' }}
             onClick={handleDownloadPDF}
           >
             Download PDF
