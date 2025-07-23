@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const API_URL = process.env.REACT_APP_BACKEND_API_URL || "https://niramay-mqzo.onrender.com";
 
@@ -56,11 +58,11 @@ function AllPatients() {
 
     try {
       await axios.delete(`${API_URL}/patients/delete/${id}`, { withCredentials: true });
-      alert("Patient deleted successfully!");
+      toast.success("Patient deleted successfully!");
       setPatients(patients.filter(patient => patient.patientId !== id));
       setFilteredPatients(filteredPatients.filter(patient => patient.patientId !== id));
     } catch (error) {
-      alert("Error deleting patient!");
+      toast.error("Error deleting patient!");
     }
   };
 
@@ -150,6 +152,7 @@ function AllPatients() {
             )}
           </tbody>
         </table>
+        <ToastContainer position="top-right" autoClose={2000} />
       </div>
 
       <style jsx>{`

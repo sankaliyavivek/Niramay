@@ -9,7 +9,8 @@ import Edit from "./Edit";
 import PatientDetail from "./PatientDetail";
 import "../node_modules/bootstrap/dist/css/bootstrap.css";
 import Register from './Register';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Login from "./Login";
 import axios from 'axios';
 
@@ -37,6 +38,7 @@ function App() {
 
 
       // ✅ Redirect to Home page
+      toast.success("Logged out successfully!");
       navigate('/');
       setShowLoginModal(true);  // ✅ Open modal again on logout
     } catch (error) {
@@ -79,6 +81,7 @@ function App() {
     localStorage.setItem('username', username);
     localStorage.setItem('token', token);
     setName(username);
+    toast.success(`Welcome, ${username}!`);
     navigate('/');
   }
 
@@ -149,6 +152,7 @@ function App() {
           </div>
         </div>
       </div>
+      <ToastContainer position="top-right" autoClose={2000} theme="colored" />
     </div>
   );
 }

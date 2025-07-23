@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 // import { useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 const API_URL = process.env.REACT_APP_BACKEND_API_URL;
 console.log(API_URL)
@@ -19,9 +20,9 @@ function Login({ onLoginSuccess }) {
             // ✅ Pass data to App.js
             onLoginSuccess(response.data.user.name, response.data.token);
 
-            alert('Login successfully!');
+            toast.success("Login successful!");
         } catch (error) {
-            alert('Invalid email or password');
+            toast.error("Invalid email or password");
         }
     }
 

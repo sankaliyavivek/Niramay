@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
@@ -28,7 +30,7 @@ function Edit() {
         setContact(patient.contact || '');
         setDate(patient.date); // already a plain string
       })
-      .catch(() => alert("Error fetching patient!"));
+      .catch(() => toast.error("Error fetching patient data"));
   }, [id]);
 
   const handleSubmit = async (e) => {
@@ -44,10 +46,10 @@ function Edit() {
         date, // already in correct string format
       }, { withCredentials: true });
 
-      alert("Patient updated successfully!");
+     toast.success("Patient updated successfully!");
       navigate("/all");
     } catch (error) {
-      alert("Error updating patient!");
+      toast.error("Error updating patient");
     }
   };
 
@@ -92,6 +94,8 @@ function Edit() {
         </div>
         <button type="submit" className="btn btn-success">Update Patient</button>
       </form>
+
+       <ToastContainer position="top-right" autoClose={2000} />
     </div>
   );
 }
