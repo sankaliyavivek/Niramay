@@ -27,21 +27,20 @@ const PatientsSchema = new mongoose.Schema({
 PatientsSchema.pre("validate", async function (next) {
     if (!this.patientId) {
         try {
-            const counter = await Counter.findOne({ _id: "patientId" });
-            this.patientId = counter ? counter.seq + 1 : 1;
+            const counter = await Counter.findByIdAndUpdate(
+                { _id: "patientId" },
+                { $inc: { seq: 1 } },
+                { new: true, upsert: true }
+            );
+            this.patientId = counter.seq;
+            next();
         } catch (err) {
-            return next(err);
+            next(err);
         }
+    } else {
+        next();
     }
-    next();
-});
 
-PatientsSchema.post("save", async function () {
-    await Counter.findByIdAndUpdate(
-        { _id: "patientId" },
-        { $inc: { seq: 1 } },
-        { new: true, upsert: true }
-    );
 });
 
 
