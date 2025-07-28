@@ -111,7 +111,7 @@ function AllPatients() {
         <table className="table table-bordered text-center">
           <thead style={{ backgroundColor: '#FF9933', color: 'white' }}>
             <tr>
-              <th>#</th>
+              <th>{searchTerm ? "patient ID" : "#"}</th>
               {/* <th>Patient ID</th> */}
               <th>Department</th>
               <th>Name</th>
@@ -124,7 +124,7 @@ function AllPatients() {
             {filteredPatients.length > 0 ? (
               filteredPatients.map((patient, index) => (
                 <tr key={patient.patientId}>
-                  <td>{index + 1}</td>
+                  <td>{searchTerm ? patient.patientId : index + 1}</td>
                   {/* <td>{patient.patientId}</td> */}
                   <td>{patient.department}</td>
                   <td>{patient.name}</td>
