@@ -147,7 +147,9 @@ function App() {
               </h5>
             </div>
             <div className="modal-body">
-              <Login onLoginSuccess={handleLoginSuccess} />
+              
+                <Login onLoginSuccess={handleLoginSuccess} />
+            
             </div>
           </div>
         </div>

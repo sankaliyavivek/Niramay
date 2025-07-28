@@ -251,6 +251,12 @@ h1 {
   align-items: center;
 }
 
+.login{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
 
 

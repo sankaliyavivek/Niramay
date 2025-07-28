@@ -27,7 +27,7 @@ function Login({ onLoginSuccess }) {
     }
 
     return (
-        <div>
+        <div className="login">
             <div className='register-form'>
                 <form onSubmit={handleLogin}>
                     <div className='register-box'>
