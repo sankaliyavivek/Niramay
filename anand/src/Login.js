@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 // import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const API_URL = process.env.REACT_APP_BACKEND_API_URL;
 console.log(API_URL)
@@ -12,15 +13,17 @@ function Login({ onLoginSuccess }) {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${API_URL}/user/login`,{ email, password },{ withCredentials: true });
-            
+            const response = await axios.post(`${API_URL}/user/login`, { email, password }, { withCredentials: true });
+
             localStorage.setItem('username', response.data.user.name);
             localStorage.setItem('token', response.data.token);
 
             // ✅ Pass data to App.js
-            onLoginSuccess(response.data.user.name, response.data.token);
-
             toast.success("Login successful!");
+            setTimeout(() => {
+                onLoginSuccess(response.data.user.name, response.data.token);
+            }, 1000);
+
         } catch (error) {
             toast.error("Invalid email or password");
         }

@@ -5,6 +5,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Loader from './Loader';
 
 const API_URL = process.env.REACT_APP_BACKEND_API_URL || "https://niramay-mqzo.onrender.com";
 
@@ -13,21 +14,50 @@ function AllPatients() {
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+
+  // useEffect(() => {
+  //   axios.get(`${API_URL}/patients/getall`, { withCredentials: true })
+  //     .then(response => {
+  //       console.log("All patients:", response.data);
+  //       const missing = response.data.filter(p => !p.patientId);
+  //       if (missing.length > 0) {
+  //         console.warn("⚠️ Patients with missing patientId:", missing);
+  //       }
+  //       setPatients(response.data);
+  //       setFilteredPatients(response.data);
+  //     })
+      
+  //     .catch(error => {console.error("Error fetching patient data:", error)});
+
+      
+
+  // }, []);
+
 
   useEffect(() => {
-    axios.get(`${API_URL}/patients/getall`, { withCredentials: true })
-      .then(response => {
-        console.log("All patients:", response.data);
-        const missing = response.data.filter(p => !p.patientId);
-        if (missing.length > 0) {
-          console.warn("⚠️ Patients with missing patientId:", missing);
-        }
-        setPatients(response.data);
-        setFilteredPatients(response.data);
-      })
-      .catch(error => console.error("Error fetching patient data:", error));
-  }, []);
+  const fetchPatients = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/patients/getall`, { withCredentials: true });
+      console.log("All patients:", response.data);
 
+      const missing = response.data.filter(p => !p.patientId);
+      if (missing.length > 0) {
+        console.warn("⚠️ Patients with missing patientId:", missing);
+      }
+
+      setPatients(response.data);
+      setFilteredPatients(response.data);
+    } catch (error) {
+      console.error("Error fetching patient data:", error);
+      toast.error("Failed to load patients");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchPatients();
+}, []);
 
   const handleSearch = (value) => {
     if (!value) {
@@ -81,6 +111,8 @@ function AllPatients() {
     doc.autoTable({ startY: 20, head: headers, body: data });
     doc.save("patients.pdf");
   };
+
+   if (loading) return <Loader />;
 
   return (
     <div className="container my-4">

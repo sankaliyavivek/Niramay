@@ -13,6 +13,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Login from "./Login";
 import axios from 'axios';
+import Loader from "./Loader";
+
+
 
 const API_URL = process.env.REACT_APP_BACKEND_API_URL;
 function App() {
@@ -60,7 +63,7 @@ function App() {
           handleLogout();
         })
         .finally(() => {
-          setLoading(false);
+              setLoading(false);
         });
     } else {
       setShowLoginModal(true);
@@ -91,16 +94,9 @@ function App() {
   }
 
   // ✅ Show Loading Spinner while checking token
-  if (loading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-        <div className="spinner-border text-primary" role="token">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
+    if (loading) {
+    return <Loader />;
   }
-
   return (
     <div className="app-container">
       {/* ✅ Show Navbar only if user is logged in */}

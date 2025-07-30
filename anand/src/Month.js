@@ -3,6 +3,7 @@ import axios from 'axios';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Loader from './Loader';
 
 const API_URL = process.env.REACT_APP_BACKEND_API_URL || "https://niramay-mqzo.onrender.com";
 
@@ -11,15 +12,19 @@ function Month() {
   const [year, setYear] = useState('');
   const [month, setMonth] = useState('');
   const [filteredData, setFilteredData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // ✅ Fetch hospital data from API
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true); // ⏳ Start loader
       try {
         const response = await axios.get(`${API_URL}/patients/getall`, { withCredentials: true });
         setMonthData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false); // ✅ Stop loader
       }
     };
     fetchData();
@@ -42,26 +47,30 @@ function Month() {
       return;
     }
 
-    const filtered = monthData.filter((item) => {
-      if (!item.date) return false;
+    setLoading(true);
 
-      const dateObj = new Date(item.date);
-      if (isNaN(dateObj)) return false;
+    setTimeout(() => {
+      const filtered = monthData.filter((item) => {
+        if (!item.date) return false;
 
-      const itemYear = dateObj.getFullYear();
-      const itemMonth = dateObj.getMonth() + 1; // 0-based
+        const dateObj = new Date(item.date);
+        if (isNaN(dateObj)) return false;
 
-      return (
-        itemYear === parseInt(year) &&
-        itemMonth === parseInt(month)
-      );
-    });
+        const itemYear = dateObj.getFullYear();
+        const itemMonth = dateObj.getMonth() + 1;
 
-    setFilteredData(filtered);
+        return (
+          itemYear === parseInt(year) &&
+          itemMonth === parseInt(month)
+        );
+      });
 
-    if (filtered.length === 0) {
-      alert("No data found for this month.");
-    }
+      setFilteredData(filtered);
+      setLoading(false);
+      if (filtered.length === 0) {
+        alert("No data found for this month.");
+      }
+    }, 500); // Optional delay for UX
   }, [year, month, monthData]);
 
   // ✅ Clear Filter
@@ -97,6 +106,9 @@ function Month() {
 
     doc.save(`Monthly-Patients-${month}-${year}.pdf`);
   };
+
+  // ✅ Show loader if data is being fetched
+  if (loading) return <Loader />;
 
   return (
     <div className='container my-5 border'>
