@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
-import axios from 'axios'
-// import { useNavigate } from 'react-router-dom';
-import { toast } from "react-toastify";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const API_URL = process.env.REACT_APP_BACKEND_API_URL;
-console.log(API_URL)
+
 function Login({ onLoginSuccess }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -18,16 +17,16 @@ function Login({ onLoginSuccess }) {
             localStorage.setItem('username', response.data.user.name);
             localStorage.setItem('token', response.data.token);
 
-            // ✅ Pass data to App.js
+            // ✅ Avoid duplicate success toast
             toast.success("Login successful!");
+        
             setTimeout(() => {
                 onLoginSuccess(response.data.user.name, response.data.token);
             }, 1000);
-
         } catch (error) {
             toast.error("Invalid email or password");
         }
-    }
+    };
 
     return (
         <div className="login">
@@ -38,7 +37,9 @@ function Login({ onLoginSuccess }) {
 
                         <div>
                             <p>Email</p>
-                            <input type="email" placeholder='Enter your email'
+                            <input
+                                type="email"
+                                placeholder='Enter your email'
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
@@ -46,20 +47,24 @@ function Login({ onLoginSuccess }) {
 
                         <div>
                             <p>Password</p>
-                            <input type='password' placeholder='Enter your password'
+                            <input
+                                type='password'
+                                placeholder='Enter your password'
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
 
                         <div className='form-button'>
-                            <button type="submit" >Login</button>
+                            <button type="submit">Login</button>
                         </div>
                     </div>
                 </form>
             </div>
+
+          
         </div>
-    )
+    );
 }
 
 export default Login;
