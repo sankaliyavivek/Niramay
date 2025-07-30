@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import Loader from './Loader';
+
 
 function PatientDetails() {
   const { id } = useParams();
@@ -26,7 +28,8 @@ function PatientDetails() {
     fetchPatient();
   }, [id, API_URL]);
 
-  if (loading) return <p>Loading patient details...</p>;
+  // if (loading) return <p>Loading patient details...</p>;
+    if (loading) return <Loader />; 
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
   return (
